@@ -16,10 +16,10 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
-            android:id="@+id/smscommunicator_log"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text=""/>
+        android:id="@+id/log"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="" />
 
     </androidx.core.widget.NestedScrollView>
 
