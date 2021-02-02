@@ -38,14 +38,14 @@
                 android:text="{fa-clock-o}" />
 
             <TextView
-                android:id="@+id/extendedboluses_date"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.1.2000 18:00"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/extendedboluses_insulin"
+                android:id="@+id/insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
@@ -53,7 +53,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/extendedboluses_duration"
+                android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
@@ -77,7 +77,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/extendedboluses_realduration"
+                android:id="@+id/real_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -94,7 +94,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/extendedboluses_ratio"
+                android:id="@+id/ratio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -111,7 +111,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/extendedboluses_netinsulin"
+                android:id="@+id/insulin_so_far"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -120,25 +120,25 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="" />
 
             <TextView
-                android:id="@+id/pump_sign"
+                android:id="@+id/ph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="PH"
                 android:textColor="@color/colorSetTempButton" />
 
             <TextView
-                android:id="@+id/ns_sign"
+                android:id="@+id/ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="NS"
                 android:textColor="@color/colorSetTempButton" />
 
@@ -159,19 +159,19 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/extendedboluses_iob"
+                android:id="@+id/iob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
                 android:text="0.12 U"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/extendedboluses_remove"
-                android:layout_width="wrap_content"
+                android:id="@+id/remove"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"
@@ -182,7 +182,6 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_alignParentBottom="true"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
