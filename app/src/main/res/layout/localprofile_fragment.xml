@@ -105,7 +105,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
-                android:id="@+id/localprofile_spinner"
+                android:id="@+id/spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -123,7 +123,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/localprofile_units"
+                android:id="@+id/units"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -153,7 +153,7 @@
         </com.google.android.material.tabs.TabLayout>
 
         <LinearLayout
-            android:id="@+id/localprofile_dia_placeholder"
+            android:id="@+id/dia_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -172,7 +172,7 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/localprofile_name"
+                        android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -205,7 +205,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
-                    android:id="@+id/localprofile_dia"
+                    android:id="@+id/dia"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
@@ -223,28 +223,28 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/localprofile_ic"
+            android:id="@+id/ic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/localprofile_isf"
+            android:id="@+id/isf"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/localprofile_basal"
+            android:id="@+id/basal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/localprofile_target"
+            android:id="@+id/target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
@@ -263,7 +263,7 @@
 
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
-                    android:id="@+id/localprofile_reset"
+                    android:id="@+id/reset"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -278,7 +278,7 @@
                     app:cornerRadius="16dp" />
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
-                    android:id="@+id/localprofile_save"
+                    android:id="@+id/save"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -288,7 +288,7 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="0dp"
                     android:layout_weight="1"
-                    app:icon="@drawable/icon_local_save"
+                    app:icon="@drawable/ic_local_save"
                     android:text="@string/save"
                     app:cornerRadius="16dp" />
 
