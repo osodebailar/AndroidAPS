@@ -15,7 +15,7 @@ tools:context="info.nightscout.androidaps.plugins.treatments.fragments.Treatment
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/profileswitch_recyclerview"
+            android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -23,4 +23,3 @@ tools:context="info.nightscout.androidaps.plugins.treatments.fragments.Treatment
     </LinearLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
