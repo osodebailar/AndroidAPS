@@ -9,21 +9,21 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.fragments.*
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.localprofile_fragment.*
-import kotlinx.android.synthetic.main.treatments_fragment.*
-import kotlinx.android.synthetic.main.treatments_fragment.tabLayout
 import javax.inject.Inject
 
 class TreatmentsFragment : DaggerFragment() {
+
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -32,26 +32,30 @@ class TreatmentsFragment : DaggerFragment() {
 
     private val disposable = CompositeDisposable()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.treatments_fragment, container, false)
-    }
+    private var _binding: TreatmentsFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        TreatmentsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.bolus))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.bolus))
 
         if (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0)
-            tabLayout.addTab(tabLayout.newTab().setText(R.string.extended_bolus))
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.extended_bolus))
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tempbasal_label))
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.careportal_temporarytarget))
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.careportal_profileswitch))
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.careportal))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tempbasal_label))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.careportal_temporarytarget))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.careportal_profileswitch))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.careportal))
 
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if ( tab.text == getText(R.string.bolus)) {
                     setFragment(TreatmentsBolusFragment())
@@ -87,7 +91,7 @@ class TreatmentsFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }, fabricPrivacy::logException)
         updateGui()
     }
 
@@ -97,15 +101,22 @@ class TreatmentsFragment : DaggerFragment() {
         disposable.clear()
     }
 
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setFragment(selectedFragment: Fragment) {
-        val ft = childFragmentManager.beginTransaction()
-        ft.replace(R.id.treatments_fragment_container, selectedFragment) // f2_container is your FrameLayout container
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        ft.addToBackStack(null)
-        ft.commit()
+        childFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, selectedFragment) // f2_container is your FrameLayout container
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .addToBackStack(null)
+            .commit()
     }
 
 
     private fun updateGui() {
+        if (_binding == null) return
     }
 }

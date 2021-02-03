@@ -15,7 +15,7 @@
             android:id="@+id/tabLayout"
             style="@style/Widget.MaterialComponents.TabLayout.Colored"
             app:tabMode="scrollable"
-            app:tabIndicatorAnimationDuration="1400"
+            app:tabIndicatorAnimationDuration="1000"
             app:tabIndicatorFullWidth="true"
             app:tabIndicatorColor="@color/iconColor"
             app:tabUnboundedRipple="false"
@@ -26,7 +26,7 @@
         </com.google.android.material.tabs.TabLayout>
 
         <FrameLayout
-            android:id="@+id/treatments_fragment_container"
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
