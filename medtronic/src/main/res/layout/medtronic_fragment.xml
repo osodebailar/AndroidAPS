@@ -16,7 +16,9 @@
         android:layout_marginTop="10dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_more" />
+        android:src="@drawable/ic_more"
+        android:contentDescription=""
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/medtronic_refresh"
@@ -27,7 +29,7 @@
         android:focusable="true"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="80dp"
-        android:text="@string/combo_refresh"
+        android:text="@string/refresh"
         app:icon="@drawable/icon_local_reset"
         android:visibility="gone"
         app:fabSize="auto" />
@@ -42,7 +44,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="150dp"
         android:text="@string/pumphistory"
-        app:icon="@drawable/icon_danarhistory"
+        app:icon="@drawable/ic_danarhistory"
         android:visibility="gone"
         app:fabSize="auto" />
 
@@ -56,13 +58,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="220dp"
         android:text="RL Stats"
-        app:icon="@drawable/icon_danarstats"
+        app:icon="@drawable/ic_danarstats"
         android:visibility="gone"
         app:fabSize="auto" />
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id = "@+id/swipeRefresh_medtronic"
+        android:id = "@+id/swipeRefresh"
         android:layout_width = "match_parent"
         android:layout_height = "match_parent">
 
@@ -98,7 +100,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/overview_pumpstatuslayout"
+                        android:id="@+id/pump_status_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -107,7 +109,7 @@
                         android:visibility="gone">
 
                         <TextView
-                            android:id="@+id/medtronic_pumpstatus"
+                            android:id="@+id/pumpstatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
@@ -152,7 +154,7 @@
                             android:textSize="14sp" />
 
                         <com.joanzapata.iconify.widget.IconTextView
-                            android:id="@+id/medtronic_rl_status"
+                            android:id="@+id/rlStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -199,7 +201,7 @@
                             android:textSize="14sp" />
 
                         <com.joanzapata.iconify.widget.IconTextView
-                            android:id="@+id/medtronic_pump_status"
+                            android:id="@+id/pump_status_icon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -212,7 +214,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/medtronic_queue"
+                        android:id="@+id/queue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="content"
@@ -252,7 +254,7 @@
                             android:textSize="14sp" />
 
                         <com.joanzapata.iconify.widget.IconTextView
-                            android:id="@+id/medtronic_pumpstate_battery"
+                            android:id="@+id/pump_state_battery"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -298,7 +300,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/medtronic_lastconnection"
+                            android:id="@+id/last_connection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -342,7 +344,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/medtronic_lastbolus"
+                            android:id="@+id/last_bolus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -387,7 +389,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/medtronic_basabasalrate"
+                            android:id="@+id/base_basal_rate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -431,7 +433,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/medtronic_tempbasal"
+                            android:id="@+id/temp_basal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -476,7 +478,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/medtronic_reservoir"
+                            android:id="@+id/reservoir"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -521,7 +523,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/medtronic_errors"
+                            android:id="@+id/errors"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
