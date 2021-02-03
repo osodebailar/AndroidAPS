@@ -22,7 +22,7 @@
                 android:orientation="vertical">
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
-                    android:id="@+id/careportal_removeandroidapsstartedevents"
+                    android:id="@+id/remove_androidaps_started_events"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -38,7 +38,7 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/careportal_recyclerview"
+                android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

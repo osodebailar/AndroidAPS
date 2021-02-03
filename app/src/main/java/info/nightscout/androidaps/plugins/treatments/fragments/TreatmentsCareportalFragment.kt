@@ -6,12 +6,13 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBinding
+import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.events.EventCareportalEventChange
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -28,11 +29,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.treatments_bolus_fragment.*
-import kotlinx.android.synthetic.main.treatments_careportal_fragment.*
 import javax.inject.Inject
 
 class TreatmentsCareportalFragment : DaggerFragment() {
+
     private val disposable = CompositeDisposable()
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
@@ -47,22 +47,26 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.treatments_careportal_fragment, container, false)
-    }
+    private var _binding: TreatmentsCareportalFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        TreatmentsCareportalFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        careportal_recyclerview.setHasFixedSize(true)
-        careportal_recyclerview.layoutManager = LinearLayoutManager(view.context)
-        careportal_recyclerview.adapter = RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false))
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.adapter = RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false))
 
         val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode()
         if (nsUploadOnly) {
-            swipeRefresh.isEnabled = false
+            binding.swipeRefresh.isEnabled = false
         } else {
-            swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.setOnRefreshListener {
                 mRunnable = Runnable {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
@@ -70,7 +74,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             rxBus.send(EventNSClientRestart())
                         })
                     }
-                    swipeRefresh.isRefreshing = false
+                    binding.swipeRefresh.isRefreshing = false
                 }
                 // Execute the task after specified time
                 mHandler.postDelayed(
@@ -79,7 +83,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                 )
             }
         }
-        careportal_removeandroidapsstartedevents.setOnClickListener {
+        binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
                     val events = MainApp.getDbHelper().getCareportalEvents(false)
@@ -104,7 +108,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventCareportalEventChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }, fabricPrivacy::logException)
         )
         updateGui()
     }
@@ -114,10 +118,19 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         disposable.clear()
     }
 
-    private fun updateGui() =
-        careportal_recyclerview?.swapAdapter(RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false)), false)
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun updateGui() {
+        if (_binding == null) return
+        binding.recyclerview.swapAdapter(RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false)), false)
+    }
 
     inner class RecyclerViewAdapter internal constructor(private var careportalEventList: List<CareportalEvent>) : RecyclerView.Adapter<CareportalEventsViewHolder>() {
+
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): CareportalEventsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_careportal_item, viewGroup, false)
             return CareportalEventsViewHolder(v)
@@ -125,28 +138,24 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: CareportalEventsViewHolder, position: Int) {
             val careportalEvent = careportalEventList[position]
-            holder.ns.visibility = if (NSUpload.isIdValid(careportalEvent._id)) View.VISIBLE else View.GONE
-            holder.date.text = dateUtil.dateAndTimeString(careportalEvent.date)
-            holder.duration.text = if (careportalEvent.durationInMsec() == 0L) "" else DateUtil.niceTimeScalar(careportalEvent.durationInMsec(), resourceHelper)
-            holder.note.text = careportalEvent.notes
-            holder.type.text = translator.translate(careportalEvent.eventType)
-            holder.remove.tag = careportalEvent
+            holder.binding.ns.visibility = if (NSUpload.isIdValid(careportalEvent._id)) View.VISIBLE else View.GONE
+            holder.binding.date.text = dateUtil.dateAndTimeString(careportalEvent.date)
+            holder.binding.duration.text = if (careportalEvent.durationInMsec() == 0L) "" else DateUtil.niceTimeScalar(careportalEvent.durationInMsec(), resourceHelper)
+            holder.binding.note.text = careportalEvent.notes
+            holder.binding.type.text = translator.translate(careportalEvent.eventType)
+            holder.binding.remove.tag = careportalEvent
         }
 
         override fun getItemCount(): Int {
             return careportalEventList.size
         }
 
-        inner class CareportalEventsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var date: TextView = itemView.findViewById(R.id.careportal_date)
-            var duration: TextView = itemView.findViewById(R.id.careportal_duration)
-            var type: TextView = itemView.findViewById(R.id.careportal_type)
-            var note: TextView = itemView.findViewById(R.id.careportal_note)
-            var remove: TextView = itemView.findViewById(R.id.careportal_remove)
-            var ns: TextView = itemView.findViewById(R.id.ns_sign)
+        inner class CareportalEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+            val binding = TreatmentsCareportalItemBinding.bind(view)
 
             init {
-                remove.setOnClickListener { v: View ->
+                binding.remove.setOnClickListener { v: View ->
                     val careportalEvent = v.tag as CareportalEvent
                     activity?.let { activity ->
                         val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(careportalEvent.eventType) + "\n" +
@@ -161,7 +170,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                         }, null)
                     }
                 }
-                remove.paintFlags = remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
             }
         }
 
