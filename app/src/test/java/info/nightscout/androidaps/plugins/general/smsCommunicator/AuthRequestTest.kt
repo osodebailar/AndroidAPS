@@ -6,6 +6,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -74,6 +75,7 @@ class AuthRequestTest : TestBase() {
         // correct reply
         authRequest = AuthRequest(injector, requester, "Request text", "ABC", action)
         actionCalled = false
+        `when`(otp.checkOTP(anyObject())).thenReturn(OneTimePasswordValidationResult.OK)
         authRequest.action("ABC")
         Assert.assertTrue(actionCalled)
         // second time action should not be called
