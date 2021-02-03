@@ -8,16 +8,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/treatments_delete_future_treatments"
+                android:id="@+id/delete_future_treatments"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -45,7 +47,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_iobtotal"
+                android:id="@+id/iobtotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="6dp"
@@ -66,7 +68,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_iobactivitytotal"
+                android:id="@+id/iob_activity_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="6dp"
@@ -81,7 +83,7 @@
             android:layout_height = "match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/treatments_recyclerview"
+                android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </androidx.recyclerview.widget.RecyclerView>
