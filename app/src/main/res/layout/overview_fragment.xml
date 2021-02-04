@@ -8,14 +8,15 @@
     tools:context=".plugins.general.overview.OverviewFragment">
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/overview_toppart_scrollbar"
+        android:id="@+id/top_part_scrollbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="6dp"
+        tools:ignore="UselessParent">
 
 
         <LinearLayout
@@ -25,13 +26,17 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/overview_notifications"
+                android:id="@+id/notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <include layout="@layout/overview_loop_pumpstatus_layout" />
+            <include
+                android:id="@+id/loop_pump_status_layout"
+                layout="@layout/overview_loop_pumpstatus_layout" />
 
-            <include layout="@layout/overview_info_layout" />
+            <include
+                android:id="@+id/info_layout"
+                layout="@layout/overview_info_layout" />
 
             <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/nsclient_layout"
@@ -45,37 +50,42 @@
                 app:justifyContent="center">
 
                 <TextView
-                    android:id="@+id/overview_pump"
+                    android:id="@+id/pump"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="4sp"
                     android:paddingEnd="4sp"
                     android:text="Pump: running"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/overview_openaps"
+                    android:id="@+id/openaps"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingStart="4sp"
                     android:paddingEnd="4sp"
                     android:text="OAPS: 3 min ago"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/overview_uploader"
+                    android:id="@+id/uploader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingStart="4sp"
                     android:paddingEnd="4sp"
                     android:text="UPLD: 84%"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
 
             </com.google.android.flexbox.FlexboxLayout>
 
-            <include layout="@layout/overview_graphs_layout" />
+            <include
+                android:id="@+id/graphs_layout"
+                layout="@layout/overview_graphs_layout" />
 
         </LinearLayout>
 

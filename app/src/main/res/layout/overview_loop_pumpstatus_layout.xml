@@ -2,18 +2,19 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/overview_looplayout"
+        android:id="@+id/loop_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/overview_activeprofile"
+            android:id="@+id/active_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -27,10 +28,11 @@
             android:shape="rectangle"
             android:background="@drawable/ic_concinnity_pille"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:drawableStartCompat="@drawable/ic_user_white" />
+            app:drawableStartCompat="@drawable/ic_user_white"
+            tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/overview_temptarget"
+            android:id="@+id/temp_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -42,19 +44,20 @@
             android:paddingBottom="4dp"
             android:background="@drawable/ic_concinnity_pille"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:drawableStartCompat="@drawable/ic_zielkreuz_white" />
+            app:drawableStartCompat="@drawable/ic_zielkreuz_white"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/overview_pumpstatuslayout"
+        android:id="@+id/pump_status_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/overview_pumpstatus"
+            android:id="@+id/pump_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"

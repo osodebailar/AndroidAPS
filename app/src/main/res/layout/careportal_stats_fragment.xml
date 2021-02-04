@@ -162,9 +162,9 @@
             android:gravity="center_vertical"
             android:paddingStart="15dp"
             android:paddingEnd="2dp"
-            android:text="@string/careportal_canula_label"
+            android:text="@string/cannula"
             android:textSize="14sp"
-            app:drawableStartCompat="@drawable/ic_cp_age_canula" />
+            app:drawableStartCompat="@drawable/ic_cp_age_cannula" />
 
         <TextView
             android:id="@+id/cannula_age_label"

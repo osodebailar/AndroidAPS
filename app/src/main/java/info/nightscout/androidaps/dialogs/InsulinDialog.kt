@@ -33,10 +33,6 @@ import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
-import kotlinx.android.synthetic.main.dialog_insulin.*
-import kotlinx.android.synthetic.main.notes.*
-import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject

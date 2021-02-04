@@ -9,13 +9,17 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.button.MaterialButton
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
@@ -30,8 +34,6 @@ import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.T
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.getThemeId
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.themeList
 import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
-import kotlinx.android.synthetic.main.themeselector_bottom_sheet.*
-import kotlinx.android.synthetic.main.themeselector_scrolling_fragment.*
 import java.util.*
 
 class ScrollingActivity : MainActivity(), View.OnClickListener {
@@ -75,16 +77,16 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         if ( sp.getBoolean(R.string.key_use_darkmode, true)) {
             val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
             if ( !sp.getBoolean("backgroundcolor", true)) {
-                scrollingactivity.background =  cd
+                findViewById<CoordinatorLayout>(R.id.scrollingactivity).background =  cd
             } else {
-                scrollingactivity.background =  drawable
+                findViewById<CoordinatorLayout>(R.id.scrollingactivity).background =  drawable
             }
         } else {
             val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
             if ( !sp.getBoolean("backgroundcolor", true)) {
-                scrollingactivity.background =  cd
+                findViewById<CoordinatorLayout>(R.id.scrollingactivity).background =  cd
             } else {
-                scrollingactivity.background =  drawable
+                findViewById<CoordinatorLayout>(R.id.scrollingactivity).background =  drawable
             }
         }
     }
@@ -93,7 +95,7 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
     private fun initBottomSheet() {
         val nightMode = sp.getBoolean(R.string.key_use_darkmode, true)
         // init the bottom sheet behavior
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet)
+        mBottomSheetBehavior = BottomSheetBehavior.from( findViewById<LinearLayout>(R.id.bottom_sheet))
         val backGround = sp.getBoolean("backgroundcolor", true)
         val switchCompatBackground = findViewById<SwitchCompat>(R.id.switch_backgroundimage)
         switchCompatBackground.isChecked = backGround
@@ -122,23 +124,23 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
                 }
             }, delayTime.toLong())
         }
-        select_backgroundcolordark.setBackgroundColor(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
-        select_backgroundcolorlight.setBackgroundColor(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
-        select_backgroundcolordark.setOnClickListener(View.OnClickListener { selectColor("dark") })
-        select_backgroundcolorlight.setOnClickListener(View.OnClickListener { selectColor("light") })
+        findViewById<TextView>(R.id.select_backgroundcolordark).setBackgroundColor(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
+        findViewById<TextView>(R.id.select_backgroundcolorlight).setBackgroundColor(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
+        findViewById<TextView>(R.id.select_backgroundcolordark).setOnClickListener(View.OnClickListener { selectColor("dark") })
+        findViewById<TextView>(R.id.select_backgroundcolorlight).setOnClickListener(View.OnClickListener { selectColor("light") })
 
-        setDefaultColorDark?.setOnClickListener(View.OnClickListener {
+        findViewById<MaterialButton>(R.id.setDefaultColorDark)?.setOnClickListener(View.OnClickListener {
             sp.putInt("darkBackgroundColor", ContextCompat.getColor(this, R.color.background_dark))
-            select_backgroundcolordark!!.setBackgroundColor(getColor((R.color.background_dark)))
+            findViewById<TextView>(R.id.select_backgroundcolordark)!!.setBackgroundColor(getColor((R.color.background_dark)))
             val delayTime = 200
-            select_backgroundcolordark!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+            findViewById<TextView>(R.id.select_backgroundcolordark)!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         })
 
-        setDefaultColorLight?.setOnClickListener(View.OnClickListener {
+        findViewById<MaterialButton>(R.id.setDefaultColorLight)?.setOnClickListener(View.OnClickListener {
             sp.putInt("lightBackgroundColor", ContextCompat.getColor(this, R.color.background_light))
-            select_backgroundcolorlight!!.setBackgroundColor(getColor((R.color.background_light)))
+            findViewById<TextView>(R.id.select_backgroundcolorlight)!!.setBackgroundColor(getColor((R.color.background_light)))
             val delayTime = 200
-            select_backgroundcolorlight!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+            findViewById<TextView>(R.id.select_backgroundcolorlight)!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         })
 
         mAdapter = ThemeAdapter(sp, mThemeList, object : RecyclerViewClickListener {
@@ -152,9 +154,9 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
             }
         })
         val mLayoutManager: RecyclerView.LayoutManager = GridLayoutManager(applicationContext, 3)
-        recyclerView.setLayoutManager(mLayoutManager)
-        recyclerView.setItemAnimator(DefaultItemAnimator())
-        recyclerView.setAdapter(mAdapter)
+        findViewById<RecyclerView>(R.id.recyclerView).setLayoutManager(mLayoutManager)
+        findViewById<RecyclerView>(R.id.recyclerView).setItemAnimator(DefaultItemAnimator())
+        findViewById<RecyclerView>(R.id.recyclerView).setAdapter(mAdapter)
     }
 
     private fun prepareThemeData() {
@@ -181,14 +183,14 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
                 ColorEnvelopeListener { envelope, _ -> //setLayoutColor(envelope);
                     if (lightOrDark === "light") {
                         sp.putInt("lightBackgroundColor", envelope.color)
-                        select_backgroundcolorlight!!.setBackgroundColor(envelope.color)
+                        findViewById<TextView>(R.id.select_backgroundcolorlight)!!.setBackgroundColor(envelope.color)
                         val delayTime = 200
-                        select_backgroundcolorlight!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+                        findViewById<TextView>(R.id.select_backgroundcolorlight)!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
                     } else if (lightOrDark === "dark") {
                         sp.putInt("darkBackgroundColor", envelope.color)
-                        select_backgroundcolordark!!.setBackgroundColor(envelope.color)
+                        findViewById<TextView>(R.id.select_backgroundcolordark)!!.setBackgroundColor(envelope.color)
                         val delayTime = 200
-                        select_backgroundcolordark!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+                        findViewById<TextView>(R.id.select_backgroundcolordark)!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
                     }
                 })
             .setNegativeButton(getString(R.string.cancel)

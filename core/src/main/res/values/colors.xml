@@ -46,7 +46,6 @@
     <!-- Basal   -->
     <!-- Treatment-->
     <color name="basebasal">#3D15FF</color>
-    <color name="tempbasal">#1ba1e2</color>
 
     <!-- Treatment Text   -->
     <color name="treatment">#B2B2B2</color>
@@ -82,6 +81,7 @@
     <color name="activity_title_background">#121212</color>
 
     <color name="toolbar_background">#303030</color>
+    <color name="tempbasal">#C803A9F4</color>
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>

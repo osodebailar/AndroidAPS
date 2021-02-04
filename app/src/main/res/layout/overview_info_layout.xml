@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/info_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,26 +9,28 @@
 
 
     <LinearLayout
-        android:id="@+id/overview_iob_llayout"
+        android:id="@+id/iob_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/overview_cob_llayout"
+        app:layout_constraintEnd_toStartOf="@+id/cob_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/overview_bg">
+        app:layout_constraintTop_toBottomOf="@+id/bg"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/ic_bolus"
-            app:tint="?attr/iconColorToolbar" />
+            app:tint="?attr/iconColorToolbar"
+            android:contentDescription="@string/iob" />
 
         <TextView
-            android:id="@+id/overview_iob"
+            android:id="@+id/iob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -35,31 +38,34 @@
             android:paddingBottom="3dp"
             android:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/overview_cob_llayout"
+        android:id="@+id/cob_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/overview_basal_llayout"
-        app:layout_constraintStart_toEndOf="@+id/overview_iob_llayout"
-        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
+        app:layout_constraintEnd_toStartOf="@+id/basal_layout"
+        app:layout_constraintStart_toEndOf="@+id/iob_layout"
+        app:layout_constraintTop_toTopOf="@+id/iob_layout"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/overview_carbs_icon"
+            android:id="@+id/carbs_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:backgroundTint="?attr/iconColorToolbar"
             android:background="@drawable/anim_carbs"
-            app:tint="?attr/iconColorToolbar" />
+            app:tint="?attr/iconColorToolbar"
+            android:contentDescription="@string/cob" />
 
         <TextView
-            android:id="@+id/overview_cob"
+            android:id="@+id/cob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -67,30 +73,33 @@
             android:paddingBottom="3dp"
             android:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/overview_basal_llayout"
+        android:id="@+id/basal_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/overview_extended_llayout"
-        app:layout_constraintStart_toEndOf="@+id/overview_cob_llayout"
-        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
+        app:layout_constraintEnd_toStartOf="@+id/extended_layout"
+        app:layout_constraintStart_toEndOf="@+id/cob_layout"
+        app:layout_constraintTop_toTopOf="@+id/iob_layout"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/overview_basebasal_icon"
+            android:id="@+id/base_basal_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/ic_cp_basal_no_tbr"
-            app:tint="?attr/iconColorToolbar" />
+            app:tint="?attr/iconColorToolbar"
+            android:contentDescription="@string/basal" />
 
         <TextView
-            android:id="@+id/overview_basebasal"
+            android:id="@+id/base_basal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -98,29 +107,32 @@
             android:paddingBottom="3dp"
             android:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/overview_extended_llayout"
+        android:id="@+id/extended_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/overview_as_llayout"
-        app:layout_constraintStart_toEndOf="@+id/overview_basal_llayout"
-        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
+        app:layout_constraintEnd_toStartOf="@+id/as_layout"
+        app:layout_constraintStart_toEndOf="@+id/basal_layout"
+        app:layout_constraintTop_toTopOf="@+id/iob_layout"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/ic_actions_startextbolus"
-            app:tint="?attr/iconColorToolbar" />
+            app:tint="?attr/iconColorToolbar"
+            android:contentDescription="@string/extended_bolus" />
 
         <TextView
-            android:id="@+id/overview_extendedbolus"
+            android:id="@+id/extended_bolus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -128,30 +140,33 @@
             android:paddingBottom="3dp"
             android:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/overview_as_llayout"
+        android:id="@+id/as_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/overview_extended_llayout"
-        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
+        app:layout_constraintStart_toEndOf="@+id/extended_layout"
+        app:layout_constraintTop_toTopOf="@+id/iob_layout"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/overview_sensitivity_icon"
+            android:id="@+id/sensitivity_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/ic_swap_vert_black_48dp_green"
-            app:tint="?attr/iconColorToolbar" />
+            app:tint="?attr/iconColorToolbar"
+            android:contentDescription="@string/autosenslabel" />
 
         <TextView
-            android:id="@+id/overview_sensitivity"
+            android:id="@+id/sensitivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -159,7 +174,8 @@
             android:paddingBottom="3dp"
             android:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

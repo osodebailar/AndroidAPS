@@ -25,15 +25,34 @@
 
 
             <TextView
+                android:id="@+id/careportal_sensoragelabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_age_label"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/careportal_sensorage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
+
+            <TextView
+                android:id="@+id/careportal_senslevellabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_level_label"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/careportal_sensorlevel"
@@ -54,7 +73,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="3"
+                android:layout_span="5"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
@@ -79,15 +98,34 @@
 
 
             <TextView
+                android:id="@+id/careportal_insulinagelabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_age_label"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/careportal_insulinage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
+
+            <TextView
+                android:id="@+id/careportal_inslevellabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_level_label"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/careportal_reservoirlevel"
@@ -108,7 +146,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="3"
+                android:layout_span="5"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
@@ -124,11 +162,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
-                android:drawableLeft="@drawable/ic_cp_age_canula"
+                android:drawableLeft="@drawable/ic_cp_age_cannula"
                 android:gravity="center_vertical"
                 android:paddingStart="15dp"
                 android:paddingRight="2dp"
-                android:text="@string/careportal_canula_label"
+                android:text="@string/cannula"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/cannula_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_age_label"
                 android:textSize="14sp" />
 
             <TextView
@@ -138,7 +186,14 @@
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
                 android:textSize="14sp" />
 
             <TextView
@@ -148,6 +203,7 @@
                 android:layout_marginRight="20dp"
                 android:text=""
                 android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -159,7 +215,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="3"
+                android:layout_span="5"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
@@ -180,9 +236,19 @@
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingStart="15dp"
-                android:text="@string/pump"
+                android:text="@string/careportal_pb_label"
                 android:textSize="14sp" />
 
+
+            <TextView
+                android:id="@+id/careportal_pbagelabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_age_label"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/careportal_pbage"
@@ -195,13 +261,22 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/careportal_pblevellabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_level_label"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/careportal_batterylevel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -213,7 +288,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="3"
+                android:layout_span="5"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"

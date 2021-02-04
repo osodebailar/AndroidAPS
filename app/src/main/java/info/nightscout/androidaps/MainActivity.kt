@@ -23,6 +23,8 @@ import android.view.*
 import android.view.MenuItem.SHOW_AS_ACTION_ALWAYS
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -88,15 +90,12 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
+import info.nightscout.androidaps.utils.ui.SingleClickButton
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.overview_statuslights
-import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
-import kotlinx.android.synthetic.main.status_fragment.*
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -192,6 +191,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         recreate()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // sets the main theme and color
@@ -221,14 +221,14 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
 
         //bluring for navigation drawer
-        BlurSupport.addTo(main_drawer_layout)
+        BlurSupport.addTo( binding.mainDrawerLayout)
 
         var downX = 0F
         var downY = 0F
         var dx = 0F
         var dy = 0F
         //remember 3 dot icon for switching fab icon from center to right and back
-        val overflowIcon = bottom_app_bar.overflowIcon
+        val overflowIcon = binding.bottomAppBar.overflowIcon
 
         // detect single tap like click
         class SingleTapDetector : GestureDetector.SimpleOnGestureListener() {
@@ -239,7 +239,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
         val gestureDetector = GestureDetector(this, SingleTapDetector())
         // set on touch listener for move detetction
-        fab.setOnTouchListener(fun(view: View, event: MotionEvent): Boolean {
+        binding.fab.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
+        fun(view: View, event: MotionEvent): Boolean {
             if (gestureDetector.onTouchEvent(event)) {
                 // code for single tap or onclick
                 onClick(view)
@@ -253,18 +254,18 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     MotionEvent.ACTION_MOVE -> {
                         dx += event.x - downX
                         dy += event.y - downY
-                        fab.translationX = dx
+                        binding.fab.translationX = dx
                     }
 
                     MotionEvent.ACTION_UP   -> {
-                        if (bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER) {
-                            bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
-                            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
-                            bottom_app_bar.overflowIcon = null
+                        if (binding.bottomAppBar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER) {
+                            binding.bottomAppBar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
+                            binding.bottomNavigation.menu.findItem(R.id.placeholder)?.isVisible = false
+                            binding.bottomAppBar.overflowIcon = null
                         } else {
-                            bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_CENTER
-                            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = true
-                            bottom_app_bar.overflowIcon = overflowIcon
+                            binding.bottomAppBar.fabAlignmentMode = FAB_ALIGNMENT_MODE_CENTER
+                            binding.bottomNavigation.menu.findItem(R.id.placeholder)?.isVisible = true
+                            binding.bottomAppBar.overflowIcon = overflowIcon
                         }
                     }
                 }
@@ -272,7 +273,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             return true
         })
 
-        overview_bg?.setOnClickListener {
+        findViewById<TextView>(R.id.overview_bg)?.setOnClickListener {
             val fullText = avgdelta
             this.let {
                 OKDialog.show(it, "Delta", fullText, null, sp)
@@ -280,22 +281,22 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
 
 
-        overview_apsmode?.setOnClickListener  { view: View? -> onClick(view!!) }
-        overview_apsmode?.setOnLongClickListener{ view: View? -> onLongClick(view!!) }
+        findViewById<ImageView>(R.id.overview_apsmode)?.setOnClickListener  { view: View? -> onClick(view!!) }
+        findViewById<ImageView>(R.id.overview_apsmode)?.setOnLongClickListener{ view: View? -> onLongClick(view!!) }
 
-        treatmentButton.setOnClickListener { view: View? -> onClick(view!!) }
-        calibrationButton.setOnClickListener { view: View? -> onClick(view!!) }
-        quickwizardButton.setOnClickListener { view: View? -> onClick(view!!) }
-        quickwizardButton.setOnLongClickListener { view: View? -> onLongClick(view!!) }
+        binding.mainBottomFabMenu.treatmentButton.setOnClickListener { view: View? -> onClick(view!!) }
+        binding.mainBottomFabMenu.calibrationButton.setOnClickListener { view: View? -> onClick(view!!) }
+        binding.mainBottomFabMenu.quickwizardButton.setOnClickListener { view: View? -> onClick(view!!) }
+        binding.mainBottomFabMenu.quickwizardButton.setOnLongClickListener { view: View? -> onLongClick(view!!) }
 
         setupBottomNavigationView()
 
         //fab menu
         //hide the fab menu icons and label
-        ViewAnimation.init(calibrationButton)
-        ViewAnimation.init(quickwizardButton)
-        if (main_bottom_fab_menu != null) {
-            main_bottom_fab_menu.visibility = View.GONE
+        ViewAnimation.init(binding.mainBottomFabMenu.calibrationButton)
+        ViewAnimation.init(binding.mainBottomFabMenu.quickwizardButton)
+        if (binding.mainBottomFabMenu != null) {
+            binding.mainBottomFabMenu.fabMenu.visibility = View.GONE
         }
 
         // initialize screen wake lock
@@ -305,8 +306,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
                 // do the trick to show bottombar >> performHide and than performShow
-                bottom_app_bar.performHide()
-                bottom_app_bar.performShow()
+                binding.bottomAppBar.performHide()
+                binding.bottomAppBar.performShow()
                 setPluginPreferenceMenuName()
                 checkPluginPreferences(binding.mainPager)
                 setPluginPreferenceMenuName()
@@ -354,16 +355,16 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         // Special settings for small displays like atom
         if (smallHeight) {
-            overview_bg?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 28F)
+            findViewById<TextView>(R.id.overview_bg).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 28F)
            // overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24F)
-            timeago?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
-            overview_delta?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
-            careportal_sensorage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
-            careportal_insulinage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
-            careportal_reservoirlevel?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
-            careportal_canulaage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
-            careportal_pbage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
-            careportal_batterylevel?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.timeago)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.overview_delta)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.careportal_sensorage)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.careportal_insulinage)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.careportal_reservoirlevel)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.careportal_canulaage)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.careportal_pbage)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            findViewById<TextView>(R.id.careportal_batterylevel)?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
         }
 
     }
@@ -394,37 +395,37 @@ open class MainActivity : NoSplashAppCompatActivity() {
     open fun changeHeaderElements() {
         val pump = activePlugin.activePump
         if ( pump.model() == PumpType.Insulet_Omnipod ) {
-            reservoir?.visibility = View.VISIBLE
-            canula?.visibility = View.GONE
-            battery?.visibility = View.GONE
+            findViewById<LinearLayout>(R.id.reservoir)?.visibility = View.VISIBLE
+            findViewById<LinearLayout>(R.id.canula)?.visibility = View.GONE
+            findViewById<LinearLayout>(R.id.battery)?.visibility = View.GONE
         } else {
-            reservoir?.visibility = View.VISIBLE
-            canula?.visibility = View.VISIBLE
-            battery?.visibility = View.VISIBLE
+            findViewById<LinearLayout>(R.id.reservoir)?.visibility = View.VISIBLE
+            findViewById<LinearLayout>(R.id.canula)?.visibility = View.VISIBLE
+            findViewById<LinearLayout>(R.id.battery)?.visibility = View.VISIBLE
         }
 
         //set sensor icon if possible
         if(dexcomPlugin.isEnabled()) {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
+            findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
         } else if(tomatoPlugin.isEnabled()) {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
+            findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
         } else if(pochTechPlugin.isEnabled()) {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_poctech))
+            findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_poctech))
         } else if(glimpPlugin.isEnabled()) {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_glimp))
+            findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_glimp))
         } else if(nSClientSourcePlugin.isEnabled()) {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_nsclient_bg))
+            findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_nsclient_bg))
         } else if(randomPlugin.isEnabled()) {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dice))
+            findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dice))
         }
 
         else if(xdripPlugin.isEnabled()) {
             if( xdripPlugin.advancedFilteringSupported())
-                sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
+                findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
             else
-                sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_xdrip))
+                findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_xdrip))
         } else {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_generic_cgm))
+            findViewById<ImageView>(R.id.sensorage)?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_generic_cgm))
         }
     }
 
@@ -439,57 +440,57 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         changeHeaderElements()
 
-        bottom_navigation?.menu?.findItem(R.id.insulinButton)?.isVisible   = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true))
-        bottom_navigation?.menu?.findItem(R.id.carbsButton)?.isVisible  =  (!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)
-        bottom_navigation?.menu?.findItem(R.id.wizardButton)?.isVisible  = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true))
-        bottom_navigation?.menu?.findItem(R.id.cgmButton)?.isVisible =     (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource))
+        binding.bottomNavigation?.menu?.findItem(R.id.insulinButton)?.isVisible   = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true))
+        binding.bottomNavigation?.menu?.findItem(R.id.carbsButton)?.isVisible  =  (!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)
+        binding.bottomNavigation?.menu?.findItem(R.id.wizardButton)?.isVisible  = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true))
+        binding.bottomNavigation?.menu?.findItem(R.id.cgmButton)?.isVisible =     (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource))
 
         if(  (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_treatment_button, false)) ) {
-            treatment?.visibility = View.VISIBLE
-            treatmentButton?.show()
-            treatmentbutton_label?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.treatment?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.treatmentButton?.show()
+            binding.mainBottomFabMenu.treatmentbuttonLabel?.visibility = View.VISIBLE
         }
         else {
-            treatmentButton?.hide()
-            treatmentbutton_label?.visibility = View.GONE
-            treatment?.visibility = View.GONE
+            binding.mainBottomFabMenu.treatmentButton?.hide()
+            binding.mainBottomFabMenu.treatmentbuttonLabel?.visibility = View.GONE
+            binding.mainBottomFabMenu.treatment?.visibility = View.GONE
         }
 
         if( (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_calibration_button, false)) ) {
-            calibration?.visibility = View.VISIBLE
-            calibrationButton?.show()
-            calibrationbutton_label?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.calibration?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.calibrationButton?.show()
+            binding.mainBottomFabMenu.calibrationbuttonLabel?.visibility = View.VISIBLE
         }
         else{
-            calibrationButton?.hide()
-            calibrationbutton_label?.visibility = View.GONE
-            calibration?.visibility = View.GONE
+            binding.mainBottomFabMenu.calibrationButton?.hide()
+            binding.mainBottomFabMenu.calibrationbuttonLabel?.visibility = View.GONE
+            binding.mainBottomFabMenu.calibration?.visibility = View.GONE
         }
 
         // QuickWizard button
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized && !pump.isSuspended) {
-            quickwizard?.visibility = View.VISIBLE
-            quickwizardButton?.show()
-            quickwizardbutton_label?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.quickwizard?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.quickwizardButton?.show()
+            binding.mainBottomFabMenu.quickwizardbuttonLabel?.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
-            quickwizardbutton_label?.text = quickWizardEntry.buttonText() + "\n" + resourceHelper.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
+            binding.mainBottomFabMenu.quickwizardbuttonLabel?.text = quickWizardEntry.buttonText() + "\n" + resourceHelper.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
                 " " + resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
-            if (wizard.calculatedTotalInsulin <= 0) quickwizardButton?.visibility = View.GONE
+            if (wizard.calculatedTotalInsulin <= 0) binding.mainBottomFabMenu.quickwizardButton?.visibility = View.GONE
         } else{
-            quickwizardButton?.hide()
-            quickwizardbutton_label?.visibility = View.GONE
-            quickwizard?.visibility = View.GONE
+            binding.mainBottomFabMenu.quickwizardButton?.hide()
+            binding.mainBottomFabMenu.quickwizardbuttonLabel?.visibility = View.GONE
+            binding.mainBottomFabMenu.quickwizard?.visibility = View.GONE
         }
 
 
         // fab menu is empty -> so we do not need the fab menu button for opening fab menu
-        if ( treatmentButton?.visibility == View.GONE && calibrationButton?.visibility == View.GONE && quickwizardButton?.visibility == View.GONE ) {
-            fab.hide()
-            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
+        if ( binding.mainBottomFabMenu.treatmentButton?.visibility == View.GONE && binding.mainBottomFabMenu.calibrationButton?.visibility == View.GONE && binding.mainBottomFabMenu.quickwizardButton?.visibility == View.GONE ) {
+            binding.fab.hide()
+            binding.bottomNavigation.menu.findItem(R.id.placeholder)?.isVisible = false
         } else {
-            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = true
-            fab.show()
+            binding.bottomNavigation.menu.findItem(R.id.placeholder)?.isVisible = true
+            binding.fab.show()
         }
     }
 
@@ -517,18 +518,18 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 R.id.fab -> {
                     isRotate = ViewAnimation.rotateFab(view, !isRotate)
                     if (isRotate) {
-                        main_bottom_fab_menu.visibility = View.VISIBLE
-                        ViewAnimation.showIn(calibrationButton)
-                        ViewAnimation.showIn(quickwizardButton)
-                        ViewAnimation.showIn(treatmentButton)
+                        binding.mainBottomFabMenu.fabMenu.visibility = View.VISIBLE
+                        ViewAnimation.showIn(binding.mainBottomFabMenu.calibrationButton)
+                        ViewAnimation.showIn(binding.mainBottomFabMenu.quickwizardButton)
+                        ViewAnimation.showIn(binding.mainBottomFabMenu.treatmentButton)
                     } else {
-                        ViewAnimation.showOut(calibrationButton)
-                        ViewAnimation.showOut(quickwizardButton)
-                        ViewAnimation.showOut(treatmentButton)
-                        main_bottom_fab_menu.visibility = View.GONE
+                        ViewAnimation.showOut(binding.mainBottomFabMenu.calibrationButton)
+                        ViewAnimation.showOut(binding.mainBottomFabMenu.quickwizardButton)
+                        ViewAnimation.showOut( binding.mainBottomFabMenu.treatmentButton)
+                        binding.mainBottomFabMenu.fabMenu.visibility = View.GONE
                     }
-                    bottom_app_bar.performHide()
-                    bottom_app_bar.performShow()
+                    binding.bottomAppBar.performHide()
+                    binding.bottomAppBar.performShow()
                     return
                 }
 
@@ -577,7 +578,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
         if (manager.isStateSaved) return
-        bottom_navigation.setOnNavigationItemSelectedListener { item ->
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.wizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(manager, "Main") })
                 R.id.insulinButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(manager, "Main") })
@@ -619,7 +620,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         val pump = activePlugin.activePump
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && actualBg != null && profile != null) {
-            quickwizardButton?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.quickwizardButton?.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
@@ -653,47 +654,47 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 else                                  -> resourceHelper.getAttributeColor(this, R.attr.bgInRange)
             }
 
-            overview_bg?.text = lastBG.valueToUnitsToString(units)
-            overview_bg?.setTextColor(color)
-            overview_bg?.text = lastBG.valueToUnitsToString(units)
-            overview_bg?.setTextColor(color)
-            overview_arrow?.setImageResource(lastBG.directionToIcon(databaseHelper))
-            overview_arrow?.setColorFilter(color)
+            findViewById<TextView>(R.id.overview_bg)?.text = lastBG.valueToUnitsToString(units)
+            findViewById<TextView>(R.id.overview_bg)?.setTextColor(color)
+            findViewById<TextView>(R.id.overview_bg)?.text = lastBG.valueToUnitsToString(units)
+            findViewById<TextView>(R.id.overview_bg)?.setTextColor(color)
+            findViewById<ImageView>(R.id.overview_arrow)?.setImageResource(lastBG.directionToIcon(databaseHelper))
+            findViewById<ImageView>(R.id.overview_arrow)?.setColorFilter(color)
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
-                overview_delta?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
+                findViewById<TextView>(R.id.overview_delta)?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
                 deltashort = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                 avgdelta = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
-                overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
+                findViewById<TextView>(R.id.overview_delta)?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                 deltashort = "---"
                 avgdelta = ""
             }
 
             // strike through if BG is old
-            overview_bg?.let { overview_bg ->
+            findViewById<TextView>(R.id.overview_bg)?.let { overview_bg ->
                 var flag = overview_bg.paintFlags
                 flag = if (actualBG == null) {
                     flag or Paint.STRIKE_THRU_TEXT_FLAG
                 } else flag and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 overview_bg.paintFlags = flag
             }
-            timeago?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
+            findViewById<TextView>(R.id.timeago)?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
         }
     }
 
     private fun upDateStatusLight() {
         // Status lights
-        overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
+        binding.overviewStatuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
         statusLightHandler.updateStatusLights(
-                careportal_canulaage,
-                careportal_insulinage,
-                careportal_reservoirlevel,
-                careportal_sensorage,
+            findViewById<TextView>(R.id.careportal_canulaage),
+            findViewById<TextView>(R.id.careportal_insulinage),
+            findViewById<TextView>(R.id.careportal_reservoirlevel),
+            findViewById<TextView>(R.id.careportal_sensorage),
             null,
-                careportal_pbage,
-                careportal_batterylevel,
+            findViewById<TextView>(R.id.careportal_pbage),
+            findViewById<TextView>(R.id.careportal_batterylevel),
                 resourceHelper.getAttributeColor(this, R.attr.statuslight_normal),
                 resourceHelper.getAttributeColor(this, R.attr.statuslight_Warning),
                 resourceHelper.getAttributeColor(this, R.attr.statuslight_alarm))
@@ -704,50 +705,50 @@ open class MainActivity : NoSplashAppCompatActivity() {
         val pump = activePlugin.activePump
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
          if (config.APS && pump.pumpDescription.isTempBasalCapable) {
-            overview_apsmode?.visibility = View.VISIBLE
+             findViewById<ImageView>(R.id.overview_apsmode)?.visibility = View.VISIBLE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_superbolus)
-                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_superbolus)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_disconnected)
-                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_disconnected)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
-                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_paused)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
-                    overview_apsmode_text?.text = ""
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_paused)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_lgs)
-                    overview_apsmode_text?.text = ""
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_lgs)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_closed)
-                    overview_apsmode_text?.text = ""
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_closed)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = ""
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_open)
-                    overview_apsmode_text?.text = ""
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_open)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = ""
                 }
 
                 else                                                                    -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_disabled)
-                    overview_apsmode_text?.text = ""
+                    findViewById<ImageView>(R.id.overview_apsmode)?.setImageResource(R.drawable.ic_loop_disabled)
+                    findViewById<TextView>(R.id.overview_apsmode_text)?.text = ""
                 }
             }
         } else {
-            overview_apsmode_text?.visibility = View.GONE
+             findViewById<TextView>(R.id.overview_apsmode_text)?.visibility = View.GONE
         }
     }
 
@@ -913,7 +914,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 }
                 menuItem.setOnMenuItemClickListener {
                     binding.mainDrawerLayout.closeDrawers()
-                    main_pager.setCurrentItem(it.itemId, true)
+                    binding.mainPager.setCurrentItem(it.itemId, true)
                     true
                 }
             }
@@ -985,7 +986,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
         setPluginPreferenceMenuName()
-        checkPluginPreferences(main_pager)
+        checkPluginPreferences(binding.mainPager)
         setDisabledMenuItemColorPluginPreferences()
         return true
     }

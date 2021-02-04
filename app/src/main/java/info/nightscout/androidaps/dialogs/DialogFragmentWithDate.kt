@@ -28,10 +28,6 @@ import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import kotlinx.android.synthetic.main.datetime.*
-import kotlinx.android.synthetic.main.notes.*
-import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
 import java.util.*
 import javax.inject.Inject
 
