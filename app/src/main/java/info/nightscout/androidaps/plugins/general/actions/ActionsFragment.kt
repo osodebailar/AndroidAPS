@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
@@ -41,7 +42,6 @@ import info.nightscout.androidaps.utils.ui.SingleClickButton
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.careportal_stats_fragment.*
 import java.util.*
 import javax.inject.Inject
 
@@ -81,6 +81,17 @@ class ActionsFragment : DaggerFragment() {
     private var historyBrowser: SingleClickButton? = null
     private var tddStats: SingleClickButton? = null
     private var pumpBatteryChange: SingleClickButton? = null
+
+    private var cannulaAge: TextView? = null
+    private var insulinAge: TextView? = null
+    private var reservoirLevel: TextView? = null
+    private var sensorAge: TextView? = null
+    private var sensorLevel: TextView? = null
+    private var pbAge: TextView? = null
+    private var batteryLevel: TextView? = null
+    private var sensorLevelLabel: TextView? = null
+    private var insulinLevelLabel: TextView? = null
+    private var pbLevelLabel: TextView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
