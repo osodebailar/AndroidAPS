@@ -89,6 +89,8 @@
         <item name="statuslight_alarm" >@color/statuslight_alarm</item>
         <!-- back arrow actionbar    -->
         <item name="android:homeAsUpIndicator">@drawable/ic_arrowleft</item>
+        <!-- colors for splash background    -->
+        <item name="splashBackground" >@color/splashBackground</item>
     </style>
 
     <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
