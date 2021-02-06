@@ -30,8 +30,6 @@ object OKDialog {
         val adb: AlertDialog.Builder = AlertDialog.Builder(context)
         adb
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptytitle))
-            //.setIcon(R.drawable.ic_check_while_48dp)
-            //.setTitle(title)
             .setMessage(message)
             .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
@@ -106,7 +104,7 @@ object OKDialog {
         val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(activity)
         adb
             .setMessage(message)
-           // .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setTitle(title)
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton

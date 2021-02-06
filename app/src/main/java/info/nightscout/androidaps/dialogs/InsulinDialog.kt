@@ -98,17 +98,6 @@ class InsulinDialog : DialogFragmentWithDate() {
                               savedInstanceState: Bundle?): View {
         onCreateViewGeneral()
 
-        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
-        try {
-            val theme: Resources.Theme? = context?.getTheme()
-            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
-            if (theme != null) {
-                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
        _binding = DialogInsulinBinding.inflate(inflater, container, false)
         return binding.root
     }

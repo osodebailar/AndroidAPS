@@ -69,6 +69,17 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            val theme: Resources.Theme? = context?.getTheme()
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            if (theme != null) {
+                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
         if ( sp.getBoolean("daynight", true)) {
             if (drawable != null) {
@@ -99,15 +110,6 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
 
         eventDateView?.text = DateUtil.dateString(eventTime)
         eventTimeView?.text = dateUtil.timeString(eventTime)
-
-        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
-        try {
-            val theme: Resources.Theme? = context?.theme
-            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
-            theme?.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->

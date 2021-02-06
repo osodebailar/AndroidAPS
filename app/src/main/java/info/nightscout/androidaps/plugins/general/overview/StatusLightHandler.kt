@@ -84,7 +84,7 @@ class StatusLightHandler @Inject constructor(
         if (level > OmnipodConstants.MAX_RESERVOIR_READING) {
             @Suppress("SetTextI18n")
             view?.text = " 50+$units"
-            view?.setTextColor(Color.WHITE)
+            view?.setTextColor(ColorNormal)
         } else {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units, ColorNormal, ColorWarning, ColorAlarm)
         }
@@ -96,7 +96,7 @@ class StatusLightHandler @Inject constructor(
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units, ColorNormal, ColorWarning, ColorAlarm)
         } else {
             view?.text = resourceHelper.gs(R.string.notavailable)
-            view?.setTextColor(Color.WHITE)
+            view?.setTextColor(ColorNormal)
         }
     }
 }

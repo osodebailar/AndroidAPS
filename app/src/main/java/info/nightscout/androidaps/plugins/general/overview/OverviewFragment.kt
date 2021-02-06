@@ -161,7 +161,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, view, landscape, resourceHelper.gb(R.bool.isTablet), smallHeight)
         nsclient_layout?.visibility = config.NSCLIENT.toVisibility()
 
-        overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
+        overview_pumpstatus?.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
+        overview_pumpstatus?.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
 
         overview_notifications?.setHasFixedSize(false)
         overview_notifications?.layoutManager = LinearLayoutManager(view.context)

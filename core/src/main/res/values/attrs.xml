@@ -55,7 +55,10 @@
     <attr name="statuslight_Warning" format="reference|color" />
     <attr name="statuslight_alarm" format="reference|color" />
     <!-- colors for statuslight handler    -->
-    <attr name="splashBackground" format="reference|color" />
+    <attr name="splashBackground" format="reference|color" />7
+    <!-- colors for information background  -->
+    <attr name="informationBackground" format="reference|color" />
+    <attr name="informationText" format="reference|color" />
     <!-- For bluring effect -->
     <declare-styleable name="BlurringView">
         <attr name="radius" format="integer"/>

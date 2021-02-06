@@ -46,11 +46,13 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
             e.printStackTrace()
         }
 
-        if ( sp.getBoolean("daynight", true)) {
+        if ( sp.getBoolean("daynight", true) ) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
             val cd = ColorDrawable(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
             val cd = ColorDrawable(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)

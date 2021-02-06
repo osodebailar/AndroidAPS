@@ -100,7 +100,8 @@ class DanaFragment : DaggerFragment() {
             )
         }
 
-        binding.danaPumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
+        binding.danaPumpstatus.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
+        binding.danaPumpstatus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
 
         ViewAnimation.showOut(binding.fabDanaMenuUserOptions)
         ViewAnimation.showOut(binding.danarHistory)

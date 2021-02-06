@@ -163,15 +163,19 @@ open class MainActivity : NoSplashAppCompatActivity() {
     open fun setNewTheme(newTheme: Int) {
         sp.putInt("theme", newTheme)
         if ( sp.getBoolean("daynight", true)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO ) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+                val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
+                if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+            }
         } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
-            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+                val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+                if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+            }
         }
 
         delegate.applyDayNight()

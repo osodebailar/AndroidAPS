@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.dialogs
 
-import android.app.Activity
-import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -13,12 +11,9 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
-import com.ms_square.etsyblur.AlwaysAsyncPolicy
 import com.ms_square.etsyblur.BlurConfig
 import com.ms_square.etsyblur.BlurDialogFragment
 import com.ms_square.etsyblur.SimpleAsyncPolicy
-import com.ms_square.etsyblur.SmartAsyncPolicy
-import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogBolusprogressBinding

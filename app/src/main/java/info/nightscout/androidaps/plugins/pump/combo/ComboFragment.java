@@ -171,10 +171,10 @@ public class ComboFragment extends DaggerFragment {
             activityView.setText(resourceHelper.gs(R.string.pump_unreachable));
         }
 
-        if( this.Colorsbatterieview == null ) {
-            this.Colorsbatterieview = batteryView.getTextColors();
-        }
         if (comboPlugin.isInitialized()) {
+            if( this.Colorsbatterieview == null ) {
+                this.Colorsbatterieview = batteryView.getTextColors();
+            }
             // battery
             batteryView.setTextSize(20);
             if (ps.batteryState == PumpState.EMPTY) {

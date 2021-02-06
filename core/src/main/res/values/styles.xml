@@ -81,6 +81,9 @@
         <item name="backgroundBaseColor" >@color/background_dark</item>
         <!-- back arrow actionbar    -->
         <item name="android:homeAsUpIndicator">@drawable/ic_arrowleft</item>
+        <!-- colors for information background  -->
+        <item name="informationBackground" >?attr/colorPrimary</item>
+        <item name="informationText" >?attr/colorOnPrimary</item>
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
