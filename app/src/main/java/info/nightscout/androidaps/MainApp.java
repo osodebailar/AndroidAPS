@@ -46,6 +46,10 @@ public class MainApp extends DaggerApplication {
 
     static DatabaseHelper sDatabaseHelper = null;
 
+    static {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    }
+
     @Inject PluginStore pluginStore;
     @Inject AAPSLogger aapsLogger;
     @Inject ActivityMonitor activityMonitor;
@@ -72,7 +76,6 @@ public class MainApp extends DaggerApplication {
 
         JodaTimeAndroid.init(this);
 
-        selectThemeMode();
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME);
         aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION);
         aapsLogger.debug("Remote: " + BuildConfig.REMOTE);
