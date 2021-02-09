@@ -26,7 +26,7 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
             e.printStackTrace()
         }
 
-        if ( spSplash.getBoolean("daynight", true)) {
+        if ( spSplash.getBoolean(R.string.key_use_darkmode, true)) {
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
             val cd = ColorDrawable(spSplash.getInt("darkBackgroundColor", ContextCompat.getColor(this, R.color.background_dark)))
             if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)

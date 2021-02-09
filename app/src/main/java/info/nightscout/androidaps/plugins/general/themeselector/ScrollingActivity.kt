@@ -105,7 +105,7 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         val switchCompat = findViewById<SwitchCompat>(R.id.switch_dark_mode)
         switchCompat.isChecked = nightMode
         switchCompat.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
-            sp.putBoolean("daynight", b)
+            sp.putBoolean(R.string.key_use_darkmode, b)
             var delayTime = 200
             if ((mBottomSheetBehavior as BottomSheetBehavior<*>).getState() == BottomSheetBehavior.STATE_EXPANDED) {
                 delayTime = 400
