@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import androidx.work.Worker
-import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
@@ -20,7 +18,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -76,44 +73,24 @@ class DexcomPlugin @Inject constructor(
         return null
     }
 
-    // cannot be inner class because of needed injection
-    class DexcomWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : Worker(context, params) {
-
-        @Inject lateinit var aapsLogger: AAPSLogger
-        @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var dexcomPlugin: DexcomPlugin
-        @Inject lateinit var nsUpload: NSUpload
-        @Inject lateinit var sp: SP
-        @Inject lateinit var bundleStore: BundleStore
-
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
-            if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = bundleStore.pickup(inputData.getLong("storeKey", -1))
-                ?: return Result.failure()
-            try {
-                val sensorType = bundle.getString("sensorType") ?: ""
-                val glucoseValues = bundle.getBundle("glucoseValues") ?: return Result.failure()
-                for (i in 0 until glucoseValues.size()) {
-                    glucoseValues.getBundle(i.toString())?.let { glucoseValue ->
-                        val bgReading = BgReading()
-                        bgReading.value = glucoseValue.getInt("glucoseValue").toDouble()
-                        bgReading.direction = glucoseValue.getString("trendArrow")
-                        bgReading.date = glucoseValue.getLong("timestamp") * 1000
-                        bgReading.raw = 0.0
-                        if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
-                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                                nsUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
-                            }
-                            if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                                nsUpload.sendToXdrip(bgReading)
-                            }
+    override fun handleNewData(intent: Intent) {
+        if (!isEnabled(PluginType.BGSOURCE)) return
+        try {
+            val sensorType = intent.getStringExtra("sensorType") ?: ""
+            val glucoseValues = intent.getBundleExtra("glucoseValues")
+            for (i in 0 until glucoseValues.size()) {
+                glucoseValues.getBundle(i.toString())?.let { glucoseValue ->
+                    val bgReading = BgReading()
+                    bgReading.value = glucoseValue.getInt("glucoseValue").toDouble()
+                    bgReading.direction = glucoseValue.getString("trendArrow")
+                    bgReading.date = glucoseValue.getLong("timestamp") * 1000
+                    bgReading.raw = 0.0
+                    if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            nsUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
+                        }
+                        if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                            nsUpload.sendToXdrip(bgReading)
                         }
                     }
                 }
