@@ -103,7 +103,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
     }
 
-    @Synchronized override fun onResume() {
+    @Synchronized
+    override fun onResume() {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventCareportalEventChange::class.java)
@@ -113,7 +114,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         updateGui()
     }
 
-    @Synchronized override fun onPause() {
+    @Synchronized
+    override fun onPause() {
         super.onPause()
         disposable.clear()
     }

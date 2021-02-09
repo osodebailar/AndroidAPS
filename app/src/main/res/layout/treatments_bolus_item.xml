@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.CardView"
     android:id="@+id/treatments_cardview"
     android:layout_width="match_parent"
@@ -34,14 +35,16 @@
                 android:gravity="center_vertical|end"
                 android:paddingStart="10dp"
                 android:paddingEnd="0dp"
-                android:text="{fa-clock-o}" />
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="5dp"
-                android:paddingEnd="0dp"/>
+                android:paddingEnd="0dp"
+                tools:ignore="RtlSymmetry"/>
 
             <TextView
                 android:id="@+id/meal_or_correction"
@@ -50,7 +53,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="Meal"
-                android:textAlignment="textEnd" />
+                android:textAlignment="textEnd"
+                tools:ignore="HardcodedText" />
 
 
         </LinearLayout>
@@ -95,7 +99,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="" />
 
             <TextView
                 android:id="@+id/pump"
@@ -103,7 +108,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/ns"
@@ -111,7 +117,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/invalid"
@@ -161,7 +168,8 @@
                 android:paddingEnd="10dp"
                 android:text="@string/calculation_short"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/colorCalculatorButton" />
+                android:textColor="@color/colorCalculatorButton"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/remove"
