@@ -72,7 +72,7 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         }
 
 
-        if ( sp.getBoolean("daynight", true)) {
+        if ( sp.getBoolean(R.string.key_use_darkmode, true)) {
             val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
             if ( !sp.getBoolean("backgroundcolor", true)) {
                 scrollingactivity.background =  cd
@@ -91,7 +91,7 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
 
 
     private fun initBottomSheet() {
-        val nightMode = sp.getBoolean("daynight", true)
+        val nightMode = sp.getBoolean(R.string.key_use_darkmode, true)
         // init the bottom sheet behavior
         mBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet)
         val backGround = sp.getBoolean("backgroundcolor", true)

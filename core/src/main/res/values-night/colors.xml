@@ -534,6 +534,8 @@
     <color name="bottomBarBackgroundDarkside">#1c171c</color>
     <color name="fabmenubackgroundDarkside">#83141428</color>
 
+    <color name="splashBackground">@color/black</color>
+
     <!-- Rig22 Colors -->>
     <color name="black">#000000</color>
     <color name="gray">#BBBBBB</color>

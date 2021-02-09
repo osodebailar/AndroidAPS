@@ -162,7 +162,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     // change to a new theme selected in theme manager
     open fun setNewTheme(newTheme: Int) {
         sp.putInt("theme", newTheme)
-        if ( sp.getBoolean("daynight", true)) {
+        if ( sp.getBoolean(R.string.key_use_darkmode, true)) {
             if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO ) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
@@ -195,7 +195,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // sets the main theme and color
-        if ( sp.getBoolean("daynight", true)) {
+        if ( sp.getBoolean(R.string.key_use_darkmode, true)) {
             val cd = ColorDrawable(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES

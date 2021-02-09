@@ -81,7 +81,7 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
         }
 
         val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
-        if ( sp.getBoolean("daynight", true)) {
+        if ( sp.getBoolean(R.string.key_use_darkmode, true)) {
             if (drawable != null) {
                 drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)
             }

@@ -116,7 +116,7 @@ class WizardDialog : BlurDialogFragment() {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        if ( sp.getBoolean("daynight", true)) {
+        if ( sp.getBoolean(R.string.key_use_darkmode, true)) {
             val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
             if (drawable != null) {
                 drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)

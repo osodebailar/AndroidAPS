@@ -50,7 +50,7 @@ object OKDialog {
     fun setdrawableBackground(context: Context, alertdialog: AlertDialog, sp: SP? = null) {
         val drawable: Drawable? = context.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
         if (sp != null) {
-            if ( sp.getBoolean("daynight", true)) {
+            if ( sp.getBoolean(R.string.key_use_darkmode, true)) {
                 if (drawable != null) {
                     drawable.setColorFilter(sp.getInt("darkBackgroundColor", R.color.background_dark), PorterDuff.Mode.SRC_IN)
                 }

@@ -289,7 +289,7 @@
     <color name="primaryColorPurpleVariant">#BB86FC</color>
     <color name="colorSecondaryPurple">#03DAC6</color>
     <color name="colorSecondaryVariantPurple">#018786</color>
-    <color name="colorOnPrimaryPurple">#FFFFFF</color>
+    <color name="colorOnPrimaryPurple">@color/concinnity_bright_grey</color>
     <color name="colorOnSecondaryPurple">#000000</color>
     <color name="colorOnBackgroundPurple">#000000</color>
     <color name="colorOnSurfacePurple">#000000</color>
@@ -533,6 +533,7 @@
     <color name="PillColorEndDarkside">#666666</color>
     <color name="fabmenubackgroundDarkside">#43141428</color>
 
+    <color name="splashBackground">@color/white</color>
 
     <!-- Rig22 Colors -->>
     <color name="black">#000000</color>

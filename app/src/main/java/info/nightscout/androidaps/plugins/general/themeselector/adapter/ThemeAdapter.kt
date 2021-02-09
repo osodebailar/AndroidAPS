@@ -45,7 +45,7 @@ class ThemeAdapter(private val sp: SP, private val themeList: List<Theme>, priva
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val theme = themeList[position]
-        holder.textView.text = getThemeName(position, sp.getBoolean("daynight", true))
+        holder.textView.text = getThemeName(position, sp.getBoolean(R.string.key_use_darkmode, true))
         holder.themeView.setTheme(theme, position)
         holder.themeView.isActivated = ScrollingActivity.selectedTheme == position
     }
