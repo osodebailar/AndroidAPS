@@ -45,6 +45,7 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -63,6 +64,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var sp: SP
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
@@ -189,43 +191,43 @@ class MedtronicFragment : DaggerFragment() {
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += rxBus
             .toObservable(EventRefreshButtonState::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ binding.medtronicRefresh.isEnabled = it.newState }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ binding.medtronicRefresh.isEnabled = it.newState }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "onStatusEvent(EventRileyLinkDeviceStatusChange): $it")
                 setDeviceStatus()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventMedtronicPumpValuesChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventMedtronicPumpConfigurationChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
                 medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
                 updateGUI()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
 
         updateGUI()
     }

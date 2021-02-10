@@ -83,11 +83,13 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.extensions.directionToIcon
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -116,6 +118,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private var isRotate = false
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
@@ -132,6 +135,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var config: Config
     @Inject lateinit var dexcomPlugin: DexcomPlugin
+    @Inject lateinit var dexcomMediator: DexcomPlugin.DexcomMediator
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var glimpPlugin: GlimpPlugin
     @Inject lateinit var tomatoPlugin: TomatoPlugin
@@ -321,7 +325,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         setupViews()
         disposable.add(rxBus
             .toObservable(EventRebuildTabs::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.recreate) recreate()
                 else setupViews()
@@ -330,7 +334,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         )
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
         )
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
@@ -540,7 +544,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        dexcomPlugin.findDexcomPackageName()?.let {
+                        dexcomMediator.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
                                 ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
@@ -552,7 +556,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                         CalibrationDialog().show(supportFragmentManager, "CalibrationDialog")
                     } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
                         try {
-                            dexcomPlugin.findDexcomPackageName()?.let {
+                            dexcomMediator.findDexcomPackageName()?.let {
                                 startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
                             }
                                     ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
@@ -588,7 +592,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        dexcomPlugin.findDexcomPackageName()?.let {
+                        dexcomMediator.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
                                 ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
@@ -654,11 +658,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 else                                  -> resourceHelper.getAttributeColor(this, R.attr.bgInRange)
             }
 
-            findViewById<TextView>(R.id.overview_bg)?.text = lastBG.valueToUnitsToString(units)
+            findViewById<TextView>(R.id.overview_bg)?.text = lastBG.valueToUnitsString(units)
             findViewById<TextView>(R.id.overview_bg)?.setTextColor(color)
-            findViewById<TextView>(R.id.overview_bg)?.text = lastBG.valueToUnitsToString(units)
+            findViewById<TextView>(R.id.overview_bg)?.text = lastBG.valueToUnitsString(units)
             findViewById<TextView>(R.id.overview_bg)?.setTextColor(color)
-            findViewById<ImageView>(R.id.overview_arrow)?.setImageResource(lastBG.directionToIcon(databaseHelper))
+            findViewById<ImageView>(R.id.overview_arrow)?.setImageResource(lastBG.trendArrow.directionToIcon())
             findViewById<ImageView>(R.id.overview_arrow)?.setColorFilter(color)
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
@@ -680,7 +684,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 } else flag and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 overview_bg.paintFlags = flag
             }
-            findViewById<TextView>(R.id.timeago)?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
+            findViewById<TextView>(R.id.timeago)?.text = DateUtil.minAgo(resourceHelper, lastBG.timestamp)
         }
     }
 

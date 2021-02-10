@@ -44,7 +44,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/loop_lastrun"
+                    android:id="@+id/lastrun"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -30,8 +30,8 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class ComboFragment extends DaggerFragment {
@@ -41,6 +41,7 @@ public class ComboFragment extends DaggerFragment {
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject AapsSchedulers aapsSchedulers;
 
     private CompositeDisposable disposable = new CompositeDisposable();
     SwipeRefreshLayout swipeRefresh;
@@ -103,12 +104,12 @@ public class ComboFragment extends DaggerFragment {
         super.onResume();
         disposable.add(rxBus
                 .toObservable(EventComboPumpUpdateGUI.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getMain())
                 .subscribe(event -> updateGui(), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventQueueChanged.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getMain())
                 .subscribe(event -> updateGui(), fabricPrivacy::logException)
         );
         updateGui();

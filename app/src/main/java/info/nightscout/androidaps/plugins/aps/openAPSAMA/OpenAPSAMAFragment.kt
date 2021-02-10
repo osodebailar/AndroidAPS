@@ -20,7 +20,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONArray
 import org.json.JSONException
@@ -32,6 +32,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -80,16 +81,16 @@ class OpenAPSAMAFragment : DaggerFragment() {
 
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateGUI()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateResultGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateResultGUI(it.text)
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
 
         updateGUI()
     }

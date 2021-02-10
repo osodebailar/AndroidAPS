@@ -12,10 +12,10 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.textValidator.DefaultEditTextValidator
 import info.nightscout.androidaps.utils.textValidator.EditTextValidator
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlin.experimental.xor
@@ -27,6 +27,7 @@ class EnterPinActivity : info.nightscout.androidaps.activities.NoSplashAppCompat
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var bleComm: BLEComm
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
@@ -66,8 +67,8 @@ class EnterPinActivity : info.nightscout.androidaps.activities.NoSplashAppCompat
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ if (it.status == EventPumpStatusChanged.Status.DISCONNECTED) finish() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ if (it.status == EventPumpStatusChanged.Status.DISCONNECTED) finish() }, fabricPrivacy::logException)
         )
     }
 

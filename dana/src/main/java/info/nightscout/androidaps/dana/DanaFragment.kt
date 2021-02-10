@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dana
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -32,8 +33,8 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -49,6 +50,7 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -196,38 +198,39 @@ class DanaFragment : DaggerFragment() {
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(info.nightscout.androidaps.dana.events.EventDanaRNewStatus::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
-                when {
-                    it.status == EventPumpStatusChanged.Status.CONNECTING   ->
+                when (it.status) {
+                    EventPumpStatusChanged.Status.CONNECTING   ->
                         @Suppress("SetTextI18n")
                         binding.btconnection.text = "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
-                    it.status == EventPumpStatusChanged.Status.CONNECTED    ->
+                    EventPumpStatusChanged.Status.CONNECTED    ->
                         @Suppress("SetTextI18n")
                         binding.btconnection.text = "{fa-bluetooth}"
-                    it.status == EventPumpStatusChanged.Status.DISCONNECTED ->
+                    EventPumpStatusChanged.Status.DISCONNECTED ->
                         @Suppress("SetTextI18n")
                         binding.btconnection.text = "{fa-bluetooth-b}"
+                    else                                       -> {}
                 }
                 if (it.getStatus(resourceHelper) != "") {
                     binding.danaPumpstatus.text = it.getStatus(resourceHelper)
@@ -252,6 +255,7 @@ class DanaFragment : DaggerFragment() {
         _binding = null
     }
 
+    @SuppressLint("SetTextI18n")
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
@@ -279,7 +283,7 @@ class DanaFragment : DaggerFragment() {
         warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal), resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning), resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
         binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
-        if (activePlugin.activePump.isFakingTempsByExtendedBoluses == true) {
+        if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             binding.tempbasal.text = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
                 ?: ""
         } else {

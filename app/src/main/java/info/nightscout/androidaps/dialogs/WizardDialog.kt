@@ -20,13 +20,13 @@ import com.ms_square.etsyblur.BlurConfig
 import com.ms_square.etsyblur.BlurDialogFragment
 import com.ms_square.etsyblur.SmartAsyncPolicy
 import androidx.fragment.app.FragmentManager
+import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.databinding.DialogWizardBinding
-import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -43,9 +43,10 @@ import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.valueToUnits
 import info.nightscout.androidaps.utils.wizard.BolusWizard
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import java.util.*
@@ -54,7 +55,9 @@ import kotlin.math.abs
 
 class WizardDialog : BlurDialogFragment() {
 
+    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var sp: SP
@@ -218,10 +221,10 @@ class WizardDialog : BlurDialogFragment() {
         // bus
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 activity?.runOnUiThread { calculateInsulin() }
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         )
 
     }
@@ -262,6 +265,10 @@ class WizardDialog : BlurDialogFragment() {
         binding.cobcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
     }
 
+    private fun valueToUnitsToString(value: Double, units: String): String =
+        if (units == Constants.MGDL) DecimalFormatter.to0Decimal(value)
+        else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
+
     private fun initDialog() {
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileInterface.profile
@@ -272,9 +279,7 @@ class WizardDialog : BlurDialogFragment() {
             return
         }
 
-
-        val profileList: ArrayList<CharSequence>
-        profileList = profileStore.getProfileList()
+        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         profileList.add(0, resourceHelper.gs(R.string.active))
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -362,7 +367,7 @@ class WizardDialog : BlurDialogFragment() {
             binding.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, profileFunction.getUnits())).valueToUnitsToString(profileFunction.getUnits()), wizard.sens)
+            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits()), wizard.sens)
             binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
             binding.carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)

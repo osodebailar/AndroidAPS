@@ -63,15 +63,15 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.extensions.directionToIcon
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.androidaps.utils.wizard.QuickWizard
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -87,6 +87,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -101,6 +102,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var dexcomPlugin: DexcomPlugin
+    @Inject lateinit var dexcomMediator: DexcomPlugin.DexcomMediator
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var actionStringHandler: ActionStringHandler
@@ -138,10 +140,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     // onDestroyView.
     private val binding get() = _binding!!
 
-/*        inflater.context.setTheme(ThemeUtil.getThemeId(sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)))
-        return inflater.inflate(R.layout.overview_fragment, container, false)
-    }*/
-    
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         OverviewFragmentBinding.inflate(inflater, container, false).also {
             _binding = it
@@ -178,8 +176,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.graphsLayout.bgGraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
         carbAnimation = binding.infoLayout.carbsIcon.background as AnimationDrawable
-        carbAnimation!!.setEnterFadeDuration(1600)
-        carbAnimation!!.setExitFadeDuration(1600)
+        carbAnimation!!.setEnterFadeDuration(1200)
+        carbAnimation!!.setExitFadeDuration(1200)
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
@@ -215,63 +213,63 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.now) updateGUI(it.from)
                 else scheduleUpdateGUI(it.from)
-            }) { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventExtendedBolusChange") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventExtendedBolusChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventTempBasalChange") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventTempBasalChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventTreatmentChange") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventTreatmentChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTempTargetChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventTempTargetChange") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventTempTargetChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventAcceptOpenLoopChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventAcceptOpenLoopChange") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventAcceptOpenLoopChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventCareportalEventChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventCareportalEventChange") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventCareportalEventChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventInitializationChanged") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventInitializationChanged") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventAutosensCalculationFinished") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventAutosensCalculationFinished") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventProfileNeedsUpdate::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventProfileNeedsUpdate") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventProfileNeedsUpdate") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventPreferenceChange") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventPreferenceChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventNewOpenLoopNotification::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updatePumpStatus(it) }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updatePumpStatus(it) }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ binding.graphsLayout.iobCalculationProgress.text = it.progress }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ binding.graphsLayout.iobCalculationProgress.text = it.progress }, fabricPrivacy::logException))
 
         refreshLoop = Runnable {
             scheduleUpdateGUI("refreshLoop")

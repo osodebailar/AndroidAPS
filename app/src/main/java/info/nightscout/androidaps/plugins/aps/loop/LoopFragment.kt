@@ -20,14 +20,16 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
 
 class LoopFragment : DaggerFragment() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -66,7 +68,7 @@ class LoopFragment : DaggerFragment() {
 
         binding.swipeRefreshLoop.setOnRefreshListener {
             mRunnable = Runnable {
-                binding.loopLastrun.text = resourceHelper.gs(R.string.executing)
+                binding.lastrun.text = resourceHelper.gs(R.string.executing)
                 Thread { loopPlugin.invoke("Loop button", true) }.start()
                 // Hide swipe to refresh icon animation
                 binding.swipeRefreshLoop.isRefreshing = false
@@ -85,18 +87,18 @@ class LoopFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventLoopUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateGUI()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
 
         disposable += rxBus
             .toObservable(EventLoopSetLastRunGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 clearGUI()
-                binding.loopLastrun.text = it.text
-            }, { fabricPrivacy.logException(it) })
+                binding.lastrun.text = it.text
+            }, fabricPrivacy::logException)
 
         updateGUI()
         sp.putBoolean(R.string.key_objectiveuseloop, true)
@@ -121,7 +123,7 @@ class LoopFragment : DaggerFragment() {
             binding.loopRequest.text = it.request?.toSpanned() ?: ""
             binding.loopConstraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
             binding.loopSource.text = it.source ?: ""
-            binding.loopLastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
+            binding.lastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
                 ?: ""
             binding.loopSmbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
             binding.loopSmbexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
@@ -150,7 +152,7 @@ class LoopFragment : DaggerFragment() {
         binding.loopConstraints.text = ""
         binding.loopConstraintsprocessed.text = ""
         binding.loopSource.text = ""
-        binding.loopLastrun.text = ""
+        binding.lastrun.text = ""
         binding.loopSmbrequestTime.text = ""
         binding.loopSmbexecutionTime.text = ""
         binding.loopTbrrequestTime.text = ""

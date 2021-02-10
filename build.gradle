@@ -2,14 +2,14 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.4.21'
+        kotlin_version = '1.4.30'
         coreVersion = '1.3.2'
-        rxjava_version = '2.2.19'
+        rxjava_version = '2.2.20'
         rxandroid_version = '2.1.1'
         rxkotlin_version = '2.4.0'
-        room_version = '2.2.5'
+        room_version = '2.2.6'
         lifecycle_version = '2.2.0'
-        dagger_version = '2.30.1'
+        dagger_version = '2.31.2'
         dagger_android_version = '2.29.1'
         dagger_android_processor_version = '2.29.1'
         dagger_android_support_version = '2.29.1'
@@ -27,6 +27,8 @@ buildscript {
         fragmentktx_version ='1.3.0-rc01'
         constraintlayout_version = '2.0.4'
         commonslang3_version = '3.11'
+        work_version = '2.5.0'
+
         junit_version = '4.13.1'
         work_version = '2.4.0'
         mockitoVersion = '2.8.47'
