@@ -112,6 +112,11 @@ class ActionsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setTempBasal = view.findViewById(R.id.actions_settempbasal)
+        cancelTempBasal = view.findViewById(R.id.actions_canceltempbasal)
+        extendedBolus = view.findViewById(R.id.actions_extendedbolus)
+        extendedBolusCancel = view.findViewById(R.id.actions_extendedbolus_cancel)
+
         extendedBolus?.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {

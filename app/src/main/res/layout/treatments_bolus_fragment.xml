@@ -10,14 +10,14 @@ tools:context=".plugins.treatments.fragments.TreatmentsBolusFragment">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/delete_future_treatments"
