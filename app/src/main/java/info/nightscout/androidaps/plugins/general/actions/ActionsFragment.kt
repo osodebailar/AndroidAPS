@@ -24,16 +24,17 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -62,6 +63,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var config: Config
+    @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -129,7 +131,7 @@ class ActionsFragment : DaggerFragment() {
         }
         extendedBolusCancel?.setOnClickListener {
             if (activePlugin.activeTreatments.isInHistoryExtendedBoluslInProgress) {
-                aapsLogger.debug("USER ENTRY: CANCEL EXTENDED BOLUS")
+                uel.log("CANCEL EXTENDED BOLUS")
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -149,7 +151,7 @@ class ActionsFragment : DaggerFragment() {
         }
         cancelTempBasal?.setOnClickListener {
             if (activePlugin.activeTreatments.isTempBasalInProgress) {
-                aapsLogger.debug("USER ENTRY: CANCEL TEMP BASAL")
+                uel.log("CANCEL TEMP BASAL")
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {

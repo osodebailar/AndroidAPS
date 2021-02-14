@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="4dp"
+    tools:context="info.nightscout.androidaps.activities.TDDStatsActivity">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id = "@+id/swipeRefreshStats"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/main_activity_content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/danar_historybuttons"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:background="@drawable/pillborder"
+                android:gravity="center_horizontal"
+                android:text="@string/tdd"
+                android:textColor="@color/mdtp_white" />
+
+            <TableLayout
+                android:id="@+id/main_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:stretchColumns="0,1,2,3,4" />
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/pillborder"
+                        android:gravity="center_horizontal"
+                        android:text="@string/cumulative_tdd"
+                        android:textColor="@color/mdtp_white" />
+
+                    <TableLayout
+                        android:id="@+id/cumulative_table"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:stretchColumns="0,1,2">
+
+                    </TableLayout>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:background="@drawable/pillborder"
+                        android:gravity="center_horizontal"
+                        android:text="@string/expweight"
+                        android:textColor="@color/mdtp_white" />
+
+                    <TableLayout
+                        android:id="@+id/expweight_table"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:stretchColumns="0,1,2" />
+
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="10dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:labelFor="@+id/total_base_basal"
+                            android:text="@string/tbb" />
+
+                        <EditText
+                            android:id="@+id/danar_stats_editTotalBaseBasal"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:inputType="numberDecimal"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:background="@drawable/pillborder" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:labelFor="@+id/total_base_basal_2"
+                            android:text="@string/tbb2" />
+
+                        <TextView
+                            android:id="@+id/danar_stats_editTotalBaseBasal2"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:layout_marginEnd="10dp"
+                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentBottom="true"
+        android:baselineAligned="false"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/danar_stats_connection_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/danar_stats_Message"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pillborder"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/warning_Message"
+                android:textColor="#ff0000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -16,6 +16,7 @@ import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -49,6 +50,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsProfileswitchFragmentBinding? = null
 
@@ -75,6 +77,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             binding.swipeRefresh.setOnRefreshListener {
                 //do the refresh of data here
                 activity?.let { activity ->
+                    uel.log("PROFILE SWITCH NS REFRESH")
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?", Runnable {
                         MainApp.getDbHelper().resetProfileSwitch()
                         rxBus.send(EventNSClientRestart())
@@ -152,6 +155,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord),
                             resourceHelper.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
                                 "\n" + resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
+                            uel.log("REMOVED PROFILE SWITCH", profileSwitch.profileName + " " + dateUtil.dateAndTimeString(profileSwitch.date))
                             val id = profileSwitch._id
                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                             else uploadQueue.removeID("dbAdd", id)
@@ -164,6 +168,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         val profileSwitch = it.tag as ProfileSwitch
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                             profileSwitch.profileObject?.let {
+                                uel.log("PROFILE SWITCH CLONE", profileSwitch.profileName + " " + dateUtil.dateAndTimeString(profileSwitch.date))
                                 val nonCustomized = it.convertToNonCustomizedProfile()
                                 if (nonCustomized.isValid(resourceHelper.gs(R.string.careportal_profileswitch, false))) {
                                     localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))

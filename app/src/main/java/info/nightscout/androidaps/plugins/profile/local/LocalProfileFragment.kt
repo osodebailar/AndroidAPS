@@ -18,11 +18,12 @@ import info.nightscout.androidaps.databinding.LocalprofileFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -43,6 +44,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sp: SP
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -235,8 +237,9 @@ class LocalProfileFragment : DaggerFragment() {
                 if (localProfilePlugin.isEdited) {
                     activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst), null, sp) }
                 } else {
-                    localProfilePlugin.addNewProfile()
-                    build()
+                uel.log("NEW PROFILE")
+                localProfilePlugin.addNewProfile()
+                build()
                 }
                 ViewAnimation.showOut(binding.fabNewProfile)
                 ViewAnimation.showOut(binding.fabCloneProfile)
@@ -244,12 +247,13 @@ class LocalProfileFragment : DaggerFragment() {
                 if( binding.fabActivateProfile.visibility == View.VISIBLE )  ViewAnimation.showOut(binding.fabActivateProfile)
             }
             R.id.fabCloneProfile          -> {
-                if (localProfilePlugin.isEdited) {
-                    activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst), null, sp) }
-                } else {
-                    localProfilePlugin.cloneProfile()
-                    build()
-                }
+            if (localProfilePlugin.isEdited) {
+                activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
+            } else {
+                uel.log("CLONE PROFILE", localProfilePlugin.currentProfile()?.name ?: "")
+                localProfilePlugin.cloneProfile()
+                build()
+            }
                 ViewAnimation.showOut(binding.fabNewProfile)
                 ViewAnimation.showOut(binding.fabCloneProfile)
                 ViewAnimation.showOut(binding.fabDeleteProfile)
@@ -257,10 +261,13 @@ class LocalProfileFragment : DaggerFragment() {
             }
             R.id.fabDeleteProfile             -> {
                 activity?.let { activity ->
-                    OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), Runnable {
-                        localProfilePlugin.removeCurrentProfile()
-                        build()
-                    }, null, sp)
+                      activity?.let { activity ->
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
+                    uel.log("REMOVE PROFILE", localProfilePlugin.currentProfile()?.name ?: "")
+                    localProfilePlugin.removeCurrentProfile()
+                    build()
+                }, null, sp)
+            }
                 }
                 ViewAnimation.showOut(binding.fabNewProfile)
                 ViewAnimation.showOut(binding.fabCloneProfile)

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
@@ -128,7 +129,7 @@ public class DetermineBasalAdapterAMAJS {
                         setTempBasalFunctionsObj};
 
                 NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
-                scriptDebug = LoggerCallback.getScriptDebug();
+                scriptDebug = LoggerCallback.Companion.getScriptDebug();
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
