@@ -209,12 +209,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                        i.putExtra("soundid", R.raw.boluserror)
-                                        i.putExtra("status", result.comment)
-                                        i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        ctx.startActivity(i)
+                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
                                     }
                                 }
                             })

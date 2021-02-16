@@ -135,6 +135,8 @@ class OpenAPSAMAFragment : DaggerFragment() {
         }
         openAPSAMAPlugin.lastAutosensResult?.let {
             binding.openapsmaAutosensdata.text = JSONFormatter.format(it.json())
+       // openAPSAMAPlugin.lastAutosensResult.let {
+       //     binding.autosensdata.text = JSONFormatter.format(it.json())
         }
     }
 

@@ -138,6 +138,8 @@ class OpenAPSSMBFragment : DaggerFragment() {
         }
         openAPSSMBPlugin.lastAutosensResult?.let {
             binding.openapsmaAutosensdata.text = JSONFormatter.format(it.json())
+       // openAPSSMBPlugin.lastAutosensResult.let {
+       //     binding.autosensdata.text = JSONFormatter.format(it.json())
         }
     }
 

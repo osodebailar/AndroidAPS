@@ -48,6 +48,8 @@ import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
@@ -106,7 +108,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var dexcomMediator: DexcomPlugin.DexcomMediator
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var notificationStore: NotificationStore
-    @Inject lateinit var actionStringHandler: ActionStringHandler
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var commandQueue: CommandQueue
@@ -317,7 +318,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                     uel.log("ACCEPT TEMP BASAL")
                                     //binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                     (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
-                                    actionStringHandler.handleInitiate("cancelChangeRequest")
+                                    rxBus.send(EventWearDoAction("cancelChangeRequest"))
                                     loopPlugin.acceptChangeRequest()
                                 })
                             })
@@ -706,7 +707,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graphData.addTreatments(fromTime, endTime)
 
                 // set manual x bounds to have nice steps
-                graphData.setNumVerticalLables()
+                graphData.setNumVerticalLabels()
                 graphData.formatAxis(fromTime, endTime)
 
 

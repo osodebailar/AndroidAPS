@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -14,7 +13,8 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.databinding.DialogLoopBinding
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
@@ -42,7 +41,6 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -53,6 +51,7 @@ class LoopDialog : DaggerDialogFragment() {
     private var _binding: DialogLoopBinding? = null
     private var loopHandler = Handler()
     private var refreshDialog: Runnable? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -106,7 +105,7 @@ class LoopDialog : DaggerDialogFragment() {
         binding.cancel.setOnClickListener { dismiss() }
 
         refreshDialog = Runnable {
-            scheduleUpdateGUI("refreshDialog")
+            scheduleUpdateGUI()
             loopHandler.postDelayed(refreshDialog, 15 * 1000L)
         }
         loopHandler.postDelayed(refreshDialog, 15 * 1000L)
@@ -121,11 +120,11 @@ class LoopDialog : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    private fun scheduleUpdateGUI(from: String) {
+    private fun scheduleUpdateGUI() {
         class UpdateRunnable : Runnable {
 
             override fun run() {
-                updateGUI(from)
+                updateGUI("refreshDialog")
                 task = null
             }
         }
@@ -139,8 +138,8 @@ class LoopDialog : DaggerDialogFragment() {
         if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
-        val closedLoopAllowed = objectivesPlugin.isClosedLoopAllowed(Constraint(true))
-        val lgsEnabled = objectivesPlugin.isLgsAllowed(Constraint(true))
+        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
+        val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
@@ -293,12 +292,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(ctx, ErrorHelperActivity::class.java)
-                            i.putExtra("soundid", R.raw.boluserror)
-                            i.putExtra("status", result.comment)
-                            i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            ctx.startActivity(i)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
                         }
                     }
                 })
