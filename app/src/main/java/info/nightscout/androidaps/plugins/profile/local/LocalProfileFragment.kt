@@ -261,13 +261,13 @@ class LocalProfileFragment : DaggerFragment() {
             }
             R.id.fabDeleteProfile             -> {
                 activity?.let { activity ->
-                      activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
-                    uel.log("REMOVE PROFILE", localProfilePlugin.currentProfile()?.name ?: "")
-                    localProfilePlugin.removeCurrentProfile()
-                    build()
-                }, null, sp)
-            }
+                    activity.let { activity ->
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
+                            uel.log("REMOVE PROFILE", localProfilePlugin.currentProfile()?.name ?: "")
+                            localProfilePlugin.removeCurrentProfile()
+                            build()
+                        }, null, sp)
+                    }
                 }
                 ViewAnimation.showOut(binding.fabNewProfile)
                 ViewAnimation.showOut(binding.fabCloneProfile)

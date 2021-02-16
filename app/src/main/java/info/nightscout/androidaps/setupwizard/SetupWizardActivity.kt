@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDevic
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -145,13 +146,13 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (currentWizardPage == 0) OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
+        if (currentWizardPage == 0)  OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard), Runnable { finish() }) else showPreviousPage(null)
     }
 
     @Suppress("UNUSED_PARAMETER")
     fun exitPressed(view: View?) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() }
+        OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard), Runnable { finish() })
     }
 
     @Suppress("UNUSED_PARAMETER")

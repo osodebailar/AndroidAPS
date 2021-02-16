@@ -3,6 +3,7 @@ package info.nightscout.androidaps.activities
 import android.os.Bundle
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityStatsBinding
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -30,7 +31,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
 
         binding.ok.setOnClickListener { finish() }
         binding.reset.setOnClickListener {
-            OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats)) {
+            OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats), Runnable {
                 uel.log("STATS RESET")
                 activityMonitor.reset()
                 recreate()

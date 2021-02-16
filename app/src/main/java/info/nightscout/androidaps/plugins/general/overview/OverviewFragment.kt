@@ -169,13 +169,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.graphsLayout.bgGraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-        binding.graphsLayout.bgGraph?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
-        binding.graphsLayout.bgGraph?.gridLabelRenderer?.reloadStyles()
-        binding.graphsLayout.bgGraph?.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
-        binding.graphsLayout.bgGraph?.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
-        binding.graphsLayout.bgGraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
-        binding.graphsLayout.bgGraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+        binding.graphsLayout.bgGraph.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.reloadStyles()
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
+        binding.graphsLayout.bgGraph.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
         carbAnimation = binding.infoLayout.carbsIcon.background as AnimationDrawable
         carbAnimation!!.setEnterFadeDuration(1200)
@@ -194,10 +194,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton)
 
-        binding.loopPumpStatusLayout.activeProfile?.setOnClickListener(this)
-        binding.loopPumpStatusLayout.activeProfile?.setOnLongClickListener(this)
-        binding.loopPumpStatusLayout.tempTarget?.setOnClickListener(this)
-        binding.loopPumpStatusLayout.tempTarget?.setOnLongClickListener(this)
+        binding.loopPumpStatusLayout.activeProfile.setOnClickListener(this)
+        binding.loopPumpStatusLayout.activeProfile.setOnLongClickListener(this)
+        binding.loopPumpStatusLayout.tempTarget.setOnClickListener(this)
+        binding.loopPumpStatusLayout.tempTarget.setOnLongClickListener(this)
         //accept_temp_button?.setOnClickListener(this)
         //overview_apsmode?.setOnClickListener(this)
         //overview_apsmode?.setOnLongClickListener(this)
@@ -438,7 +438,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val units = profileFunction.getUnits()
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
         if (tempTarget != null) {
-            binding.loopPumpStatusLayout.tempTarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
+            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
             val drawable: Drawable = binding.loopPumpStatusLayout.tempTarget.background
             val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
             if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
@@ -451,7 +451,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             if (targetUsed != 0.0 && abs(profile.targetMgdl - targetUsed) > 0.01) {
                 aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
-                binding.loopPumpStatusLayout.tempTarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
+                binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 val drawable: Drawable = binding.loopPumpStatusLayout.tempTarget.background
                 val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
                 if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
@@ -461,7 +461,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } else {
                 val theme = requireContext().theme
                 if (theme != null) {
-                    binding.loopPumpStatusLayout.tempTarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+                    binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
                     setPillStyle(binding.loopPumpStatusLayout.tempTarget,R.attr.PillColorStart, R.attr.PillColorEnd , R.color.ribbonTextDefault)
                 }
             }
@@ -470,7 +470,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun setActiveProfilePill(profile: Profile) {
-        binding.loopPumpStatusLayout.activeProfile?.text = profileFunction.getProfileNameWithDuration()
+        binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithDuration()
         if (profile.percentage != 100 || profile.timeshift != 0) {
             val drawable: Drawable = binding.loopPumpStatusLayout.activeProfile.background
             val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.activeProfile.compoundDrawables
@@ -553,10 +553,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.baseBasal.setTextColor(activeTemp?.let { resourceHelper.gc(R.color.basal) }
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
-        binding.infoLayout.baseBasalIcon?.setImageResource(R.drawable.ic_cp_basal_no_tbr)
+        binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_no_tbr)
         val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) ?:100
-        if (percentRate > 100) binding.infoLayout.baseBasalIcon?.setImageResource(R.drawable.ic_cp_basal_tbr_high)
-        if (percentRate < 100) binding.infoLayout.baseBasalIcon?.setImageResource(R.drawable.ic_cp_basal_tbr_low)
+        if (percentRate > 100) binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_tbr_high)
+        if (percentRate < 100) binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())

@@ -199,6 +199,8 @@
     <!-- TDD Stats   -->
     <color name="background_stats_color">#707991</color>
 
+    <color name="bgi">#00EEEE</color>
+
     <!---Android Dark ans Light Theme Base colors-->
     <color name="background_dark">#121212</color>
     <color name="background_light">#FFFFFF</color>

@@ -444,52 +444,52 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         changeHeaderElements()
 
-        binding.bottomNavigation?.menu?.findItem(R.id.insulinButton)?.isVisible   = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true))
-        binding.bottomNavigation?.menu?.findItem(R.id.carbsButton)?.isVisible  =  (!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)
-        binding.bottomNavigation?.menu?.findItem(R.id.wizardButton)?.isVisible  = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true))
-        binding.bottomNavigation?.menu?.findItem(R.id.cgmButton)?.isVisible =     (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource))
+        binding.bottomNavigation.menu.findItem(R.id.insulinButton)?.isVisible   = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true))
+        binding.bottomNavigation.menu.findItem(R.id.carbsButton)?.isVisible  =  (!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)
+        binding.bottomNavigation.menu.findItem(R.id.wizardButton)?.isVisible  = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true))
+        binding.bottomNavigation.menu.findItem(R.id.cgmButton)?.isVisible =     (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource))
 
         if(  (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_treatment_button, false)) ) {
-            binding.mainBottomFabMenu.treatment?.visibility = View.VISIBLE
-            binding.mainBottomFabMenu.treatmentButton?.show()
-            binding.mainBottomFabMenu.treatmentbuttonLabel?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.treatment.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.treatmentButton.show()
+            binding.mainBottomFabMenu.treatmentbuttonLabel.visibility = View.VISIBLE
         }
         else {
-            binding.mainBottomFabMenu.treatmentButton?.hide()
+            binding.mainBottomFabMenu.treatmentButton.hide()
             binding.mainBottomFabMenu.treatmentbuttonLabel?.visibility = View.GONE
-            binding.mainBottomFabMenu.treatment?.visibility = View.GONE
+            binding.mainBottomFabMenu.treatment.visibility = View.GONE
         }
 
         if( (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_calibration_button, false)) ) {
-            binding.mainBottomFabMenu.calibration?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.calibration.visibility = View.VISIBLE
             binding.mainBottomFabMenu.calibrationButton?.show()
-            binding.mainBottomFabMenu.calibrationbuttonLabel?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.calibrationbuttonLabel.visibility = View.VISIBLE
         }
         else{
-            binding.mainBottomFabMenu.calibrationButton?.hide()
+            binding.mainBottomFabMenu.calibrationButton.hide()
             binding.mainBottomFabMenu.calibrationbuttonLabel?.visibility = View.GONE
-            binding.mainBottomFabMenu.calibration?.visibility = View.GONE
+            binding.mainBottomFabMenu.calibration.visibility = View.GONE
         }
 
         // QuickWizard button
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized && !pump.isSuspended) {
-            binding.mainBottomFabMenu.quickwizard?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.quickwizard.visibility = View.VISIBLE
             binding.mainBottomFabMenu.quickwizardButton?.show()
             binding.mainBottomFabMenu.quickwizardbuttonLabel?.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
             binding.mainBottomFabMenu.quickwizardbuttonLabel?.text = quickWizardEntry.buttonText() + "\n" + resourceHelper.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
                 " " + resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
-            if (wizard.calculatedTotalInsulin <= 0) binding.mainBottomFabMenu.quickwizardButton?.visibility = View.GONE
+            if (wizard.calculatedTotalInsulin <= 0) binding.mainBottomFabMenu.quickwizardButton.visibility = View.GONE
         } else{
-            binding.mainBottomFabMenu.quickwizardButton?.hide()
-            binding.mainBottomFabMenu.quickwizardbuttonLabel?.visibility = View.GONE
-            binding.mainBottomFabMenu.quickwizard?.visibility = View.GONE
+            binding.mainBottomFabMenu.quickwizardButton.hide()
+            binding.mainBottomFabMenu.quickwizardbuttonLabel.visibility = View.GONE
+            binding.mainBottomFabMenu.quickwizard.visibility = View.GONE
         }
 
 
         // fab menu is empty -> so we do not need the fab menu button for opening fab menu
-        if ( binding.mainBottomFabMenu.treatmentButton?.visibility == View.GONE && binding.mainBottomFabMenu.calibrationButton?.visibility == View.GONE && binding.mainBottomFabMenu.quickwizardButton?.visibility == View.GONE ) {
+        if ( binding.mainBottomFabMenu.treatmentButton.visibility == View.GONE && binding.mainBottomFabMenu.calibrationButton.visibility == View.GONE && binding.mainBottomFabMenu.quickwizardButton?.visibility == View.GONE ) {
             binding.fab.hide()
             binding.bottomNavigation.menu.findItem(R.id.placeholder)?.isVisible = false
         } else {
@@ -624,7 +624,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         val pump = activePlugin.activePump
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && actualBg != null && profile != null) {
-            binding.mainBottomFabMenu.quickwizardButton?.visibility = View.VISIBLE
+            binding.mainBottomFabMenu.quickwizardButton.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
@@ -690,7 +690,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
     private fun upDateStatusLight() {
         // Status lights
-        binding.overviewStatuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
+        binding.overviewStatuslights.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
         statusLightHandler.updateStatusLights(
             findViewById<TextView>(R.id.careportal_canulaage),
             findViewById<TextView>(R.id.careportal_insulinage),

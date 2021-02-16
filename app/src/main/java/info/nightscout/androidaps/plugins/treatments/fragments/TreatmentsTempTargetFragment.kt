@@ -77,7 +77,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             binding.swipeRefresh.setOnRefreshListener {
                 //do the refresh of data here
                 context?.let { context ->
-                    showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
+                    OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
                         uel.log("TT NS REFRESH")
                         MainApp.getDbHelper().resetTempTargets()
                         rxBus.send(EventNSClientRestart())
