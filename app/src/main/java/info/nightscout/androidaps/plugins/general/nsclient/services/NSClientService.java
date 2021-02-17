@@ -20,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -830,7 +829,7 @@ public class NSClientService extends DaggerService {
                 } finally {
                     iterator.close();
                 }
-            } catch (IOException e) {
+            } catch (SQLException e) {
                 aapsLogger.error("Unhandled exception", e);
             }
 

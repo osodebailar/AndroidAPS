@@ -119,7 +119,7 @@ android {
         renderscriptTargetApi 28 //must match target sdk and build tools
         renderscriptSupportModeEnabled true
         versionCode 1500
-        version "2.8.2.1-dev-a"
+        version "2.8.2.1-dev-ab"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'

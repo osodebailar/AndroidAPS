@@ -9,7 +9,6 @@ import com.j256.ormlite.dao.CloseableIterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.inject.Inject;
@@ -137,7 +136,7 @@ public class UploadQueue implements UploadQueueInterface {
             } finally {
                 iterator.close();
             }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);
         }
         return result;

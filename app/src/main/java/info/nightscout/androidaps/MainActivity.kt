@@ -669,7 +669,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             if (glucoseStatus != null) {
                 findViewById<TextView>(R.id.overview_delta)?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
                 deltashort = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                avgdelta = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                avgdelta = "Δ15m: ${Profile.toUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 findViewById<TextView>(R.id.overview_delta)?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                 deltashort = "---"
